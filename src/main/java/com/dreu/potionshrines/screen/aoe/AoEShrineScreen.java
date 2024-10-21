@@ -1,6 +1,7 @@
 package com.dreu.potionshrines.screen.aoe;
 
 import com.dreu.potionshrines.network.PacketHandler;
+import com.dreu.potionshrines.network.ResetCooldownPacket;
 import com.dreu.potionshrines.network.SaveAoEShrinePacket;
 import com.dreu.potionshrines.screen.IconScreen;
 import com.dreu.potionshrines.screen.IconSelectionMenu;
@@ -43,58 +44,58 @@ public class AoEShrineScreen extends ShrineScreen<AoEShrineMenu> implements Icon
     @Override
     protected void initialize() {
         saveButton = new Button(leftPos + 222, topPos + 166, NUMBER_BOX_WIDTH, 20, Component.translatable("gui.potion_shrines.save"), this::onSaveClick);
-            resetCooldownButton = new Button(leftPos + 81, topPos + 65, NUMBER_BOX_WIDTH, 20, Component.literal(String.valueOf(menu.shrineEntity.getRemainingCooldown() / 20)), this::onCooldownClick);
-            blockNbtButton = new Button(leftPos + 82, topPos + 166, NUMBER_BOX_WIDTH, 20, Component.translatable("gui.potion_shrines.blockNbt"), this::onCopyBlockNbtClick);
-            itemNbtButton = new Button(leftPos + 148, topPos + 166, NUMBER_BOX_WIDTH, 20, Component.translatable("gui.potion_shrines.itemNbt"), this::onCopyItemNbtClick);
+        resetCooldownButton = new Button(leftPos + 81, topPos + 65, NUMBER_BOX_WIDTH, 20, Component.literal(String.valueOf(menu.shrineEntity.getRemainingCooldown() / 20)), this::onCooldownClick);
+        blockNbtButton = new Button(leftPos + 82, topPos + 166, NUMBER_BOX_WIDTH, 20, Component.translatable("gui.potion_shrines.blockNbt"), this::onCopyBlockNbtClick);
+        itemNbtButton = new Button(leftPos + 148, topPos + 166, NUMBER_BOX_WIDTH, 20, Component.translatable("gui.potion_shrines.itemNbt"), this::onCopyItemNbtClick);
 
-            effectBox = new EditBox(font, leftPos + 8, topPos + 32, EFFECT_BOX_WIDTH, EDIT_BOX_HEIGHT, Component.literal(""));
-            effectBox.setMaxLength(100);
-            effectBox.setVisible(true);
-            effectBox.setTextColor(0xFFFFFF);
-            effectBox.setResponder(this::onEffectChanged);
-            effectBox.setValue(menu.shrineEntity.getEffect());
+        effectBox = new EditBox(font, leftPos + 8, topPos + 32, EFFECT_BOX_WIDTH, EDIT_BOX_HEIGHT, Component.literal(""));
+        effectBox.setMaxLength(100);
+        effectBox.setVisible(true);
+        effectBox.setTextColor(0xFFFFFF);
+        effectBox.setResponder(this::onEffectChanged);
+        effectBox.setValue(menu.shrineEntity.getEffect());
 
-            amplifierBox = new EditBox(font, leftPos + 243, topPos + 32, 45, EDIT_BOX_HEIGHT, Component.literal(""));
-            amplifierBox.setMaxLength(3);
-            amplifierBox.setVisible(true);
-            amplifierBox.setTextColor(0xFFFFFF);
-            amplifierBox.setResponder(this::onAmplifierChanged);
-            amplifierBox.setFilter((s -> s.matches("\\d*")));
-            amplifierBox.setValue(String.valueOf(menu.shrineEntity.getAmplifier()));
+        amplifierBox = new EditBox(font, leftPos + 243, topPos + 32, 45, EDIT_BOX_HEIGHT, Component.literal(""));
+        amplifierBox.setMaxLength(3);
+        amplifierBox.setVisible(true);
+        amplifierBox.setTextColor(0xFFFFFF);
+        amplifierBox.setResponder(this::onAmplifierChanged);
+        amplifierBox.setFilter((s -> s.matches("\\d*")));
+        amplifierBox.setValue(String.valueOf(menu.shrineEntity.getAmplifier()));
 
-            durationBox = new EditBox(font, leftPos + 8, topPos + 66, NUMBER_BOX_WIDTH, EDIT_BOX_HEIGHT, Component.literal(""));
-            durationBox.setMaxLength(6);
-            durationBox.setVisible(true);
-            durationBox.setTextColor(0xFFFFFF);
-            durationBox.setResponder(this::onDurationChanged);
-            durationBox.setFilter((s -> s.matches("\\d*")));
-            durationBox.setValue(String.valueOf(menu.shrineEntity.getDuration() / 20));
+        durationBox = new EditBox(font, leftPos + 8, topPos + 66, NUMBER_BOX_WIDTH, EDIT_BOX_HEIGHT, Component.literal(""));
+        durationBox.setMaxLength(6);
+        durationBox.setVisible(true);
+        durationBox.setTextColor(0xFFFFFF);
+        durationBox.setResponder(this::onDurationChanged);
+        durationBox.setFilter((s -> s.matches("\\d*")));
+        durationBox.setValue(String.valueOf(menu.shrineEntity.getDuration() / 20));
 
 
-            maxCooldownBox = new EditBox(font, leftPos + 148, topPos + 66, NUMBER_BOX_WIDTH, EDIT_BOX_HEIGHT, Component.literal(""));
-            maxCooldownBox.setMaxLength(6);
-            maxCooldownBox.setVisible(true);
-            maxCooldownBox.setTextColor(0xFFFFFF);
-            maxCooldownBox.setResponder(this::onCooldownChanged);
-            maxCooldownBox.setFilter((s -> s.matches("\\d*")));
-            maxCooldownBox.setValue(String.valueOf(menu.shrineEntity.getMaxCooldown() / 20));
+        maxCooldownBox = new EditBox(font, leftPos + 148, topPos + 66, NUMBER_BOX_WIDTH, EDIT_BOX_HEIGHT, Component.literal(""));
+        maxCooldownBox.setMaxLength(6);
+        maxCooldownBox.setVisible(true);
+        maxCooldownBox.setTextColor(0xFFFFFF);
+        maxCooldownBox.setResponder(this::onCooldownChanged);
+        maxCooldownBox.setFilter((s -> s.matches("\\d*")));
+        maxCooldownBox.setValue(String.valueOf(menu.shrineEntity.getMaxCooldown() / 20));
 
-            radiusBox = new EditBox(font, leftPos + 222, topPos + 66, NUMBER_BOX_WIDTH, EDIT_BOX_HEIGHT, Component.literal(""));
-            radiusBox.setMaxLength(2);
-            radiusBox.setVisible(true);
-            radiusBox.setTextColor(0xFFFFFF);
-            radiusBox.setResponder(this::onRadiusChanged);
-            radiusBox.setFilter((s -> s.matches("\\d*")));
-            radiusBox.setValue(String.valueOf(menu.shrineEntity.getRadius()));
+        radiusBox = new EditBox(font, leftPos + 222, topPos + 66, NUMBER_BOX_WIDTH, EDIT_BOX_HEIGHT, Component.literal(""));
+        radiusBox.setMaxLength(2);
+        radiusBox.setVisible(true);
+        radiusBox.setTextColor(0xFFFFFF);
+        radiusBox.setResponder(this::onRadiusChanged);
+        radiusBox.setFilter((s -> s.matches("\\d*")));
+        radiusBox.setValue(String.valueOf(menu.shrineEntity.getRadius()));
 
-            effectPlayersButton = new Button(leftPos + 8, topPos + 99, NUMBER_BOX_WIDTH, 20,
-                    Component.translatable("potion_shrines." + menu.shrineEntity.canEffectPlayers()), this::onBooleanClick);
-            effectMonstersButton = new Button(leftPos + 8, topPos + 132, NUMBER_BOX_WIDTH, 20,
-                    Component.translatable("potion_shrines." + menu.shrineEntity.canEffectMonsters()), this::onBooleanClick);
-            replenishButton = new Button(leftPos + 8, topPos + 166, NUMBER_BOX_WIDTH, 20,
-                    Component.translatable("potion_shrines." + menu.shrineEntity.canReplenish()), this::onBooleanClick);
-            suggestions = new ArrayList<>();
-            icon = menu.shrineEntity.getIcon();
+        effectPlayersButton = new Button(leftPos + 8, topPos + 99, NUMBER_BOX_WIDTH, 20,
+                Component.translatable("potion_shrines." + menu.shrineEntity.canEffectPlayers()), this::onBooleanClick);
+        effectMonstersButton = new Button(leftPos + 8, topPos + 132, NUMBER_BOX_WIDTH, 20,
+                Component.translatable("potion_shrines." + menu.shrineEntity.canEffectMonsters()), this::onBooleanClick);
+        replenishButton = new Button(leftPos + 8, topPos + 166, NUMBER_BOX_WIDTH, 20,
+                Component.translatable("potion_shrines." + menu.shrineEntity.canReplenish()), this::onBooleanClick);
+        suggestions = new ArrayList<>();
+        icon = menu.shrineEntity.getIcon();
     }
 
     @Override
@@ -196,6 +197,7 @@ public class AoEShrineScreen extends ShrineScreen<AoEShrineMenu> implements Icon
         effectPlayersButton.setMessage(Component.translatable("potion_shrines." + menu.shrineEntity.canEffectPlayers()));
         effectMonstersButton.setMessage(Component.translatable("potion_shrines." + menu.shrineEntity.canEffectMonsters()));
         replenishButton.setMessage(Component.translatable("potion_shrines." + menu.shrineEntity.canReplenish()));
+        suggestions.clear();
     }
     private void onSaveClick(Button button) {
         if (getEffectFromString(effectBox.getValue()) == null) {
@@ -231,6 +233,13 @@ public class AoEShrineScreen extends ShrineScreen<AoEShrineMenu> implements Icon
         ));
         onClose();
     }
+
+    @Override
+    protected void onCooldownClick(Button button) {
+        menu.shrineEntity.setRemainingCooldown(0);
+        PacketHandler.CHANNEL.sendToServer(new ResetCooldownPacket());
+    }
+
     private void onRadiusChanged(String newRadius) {
         if (!newRadius.isEmpty() && parseInt(newRadius) > 64) {
             radiusBox.setValue("64");
@@ -244,7 +253,8 @@ public class AoEShrineScreen extends ShrineScreen<AoEShrineMenu> implements Icon
         super.render(poseStack, mouseX, mouseY, partialTicks);
         if (suggestions.isEmpty()) {
             resetCooldownButton.setMessage(Component.literal(String.valueOf(menu.shrineEntity.getRemainingCooldown() / 20)));
-            resetCooldownButton.active = !(menu.shrineEntity.getRemainingCooldown() == 0);
+            if (menu.shrineEntity.getRemainingCooldown() == 0) resetCooldownButton.active = false;
+            else resetCooldownButton.active = (cooldownDelay == 0);
             if (isMouseOverIcon(mouseX, mouseY)) {
                 poseStack.translate(0, 0, 1);
                 hLine(poseStack, leftPos + 120, leftPos + 171, topPos + 100, 0xFF80ff80);
