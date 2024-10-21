@@ -1,10 +1,10 @@
 package com.dreu.potionshrines.registry;
 
 import com.dreu.potionshrines.PotionShrines;
+import com.dreu.potionshrines.levelgen.features.placers.AoEShrineSurfaceAltarFeaturePlacer;
 import com.dreu.potionshrines.levelgen.features.placers.AuraShrineSurfaceAltarFeaturePlacer;
 import com.dreu.potionshrines.levelgen.features.placers.ShrineCaveFeaturePlacer;
-import com.dreu.potionshrines.levelgen.features.placers.AoEShrineSurfaceAltarFeaturePlacer;
-import com.dreu.potionshrines.levelgen.features.placers.ShrineSurfaceAltarFeaturePlacer;
+import com.dreu.potionshrines.levelgen.features.placers.SimpleShrineSurfaceAltarFeaturePlacer;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -27,7 +27,7 @@ import static com.dreu.potionshrines.registry.PSBlocks.*;
 public class PSFeatures {
     public static final DeferredRegister<Feature<?>> FEATURES = DeferredRegister.create(ForgeRegistries.FEATURES, PotionShrines.MODID);
 
-    public static final RegistryObject<Feature<NoneFeatureConfiguration>> SIMPLE_SHRINE_SURFACE_ALTAR = FEATURES.register("simple_shrine_surface_altar", ShrineSurfaceAltarFeaturePlacer::new);
+    public static final RegistryObject<Feature<NoneFeatureConfiguration>> SIMPLE_SHRINE_SURFACE_ALTAR = FEATURES.register("simple_shrine_surface_altar", SimpleShrineSurfaceAltarFeaturePlacer::new);
     public static final RegistryObject<Feature<NoneFeatureConfiguration>> AOE_SHRINE_SURFACE_ALTAR = FEATURES.register("aoe_shrine_surface_altar", AoEShrineSurfaceAltarFeaturePlacer::new);
     public static final RegistryObject<Feature<NoneFeatureConfiguration>> AURA_SHRINE_SURFACE_ALTAR = FEATURES.register("aura_shrine_surface_altar", AuraShrineSurfaceAltarFeaturePlacer::new);
 	public static final RegistryObject<Feature<NoneFeatureConfiguration>> SIMPLE_SHRINE_CAVE = FEATURES.register("simple_shrine_cave", () -> new ShrineCaveFeaturePlacer(SIMPLE_SHRINE_BASE.get(), SIMPLE_SHRINE.get()));

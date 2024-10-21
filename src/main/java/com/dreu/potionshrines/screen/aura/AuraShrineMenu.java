@@ -1,6 +1,5 @@
 package com.dreu.potionshrines.screen.aura;
 
-import com.dreu.potionshrines.blocks.shrine.aoe.AoEShrineBlockEntity;
 import com.dreu.potionshrines.blocks.shrine.aura.AuraShrineBlockEntity;
 import com.dreu.potionshrines.registry.PSMenuTypes;
 import com.dreu.potionshrines.screen.ShrineMenu;

@@ -1,8 +1,6 @@
 package com.dreu.potionshrines.blocks.shrine;
 
-import com.dreu.potionshrines.blocks.shrine.aoe.AoEShrineBaseBlock;
 import com.dreu.potionshrines.config.General;
-import com.google.common.collect.ImmutableMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -26,8 +24,6 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.function.Function;
 
 import static com.dreu.potionshrines.config.General.OBTAINABLE;
 import static com.dreu.potionshrines.config.General.SHRINE_INDESTRUCTIBLE;

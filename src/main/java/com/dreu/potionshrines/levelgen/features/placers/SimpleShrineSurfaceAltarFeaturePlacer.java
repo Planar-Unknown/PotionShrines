@@ -15,8 +15,8 @@ import static com.dreu.potionshrines.blocks.shrine.simple.SimpleShrineBaseBlock.
 import static net.minecraft.world.level.block.StairBlock.FACING;
 import static net.minecraft.world.level.block.StairBlock.SHAPE;
 
-public class ShrineSurfaceAltarFeaturePlacer extends Feature<NoneFeatureConfiguration> {
-    public ShrineSurfaceAltarFeaturePlacer() {super(NoneFeatureConfiguration.CODEC);}
+public class SimpleShrineSurfaceAltarFeaturePlacer extends Feature<NoneFeatureConfiguration> {
+    public SimpleShrineSurfaceAltarFeaturePlacer() {super(NoneFeatureConfiguration.CODEC);}
     @Override
     public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
         if (!context.level().getServer().getWorldData().worldGenSettings().generateStructures()) {return false;}
