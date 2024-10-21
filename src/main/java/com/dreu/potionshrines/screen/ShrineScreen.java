@@ -37,7 +37,7 @@ public class ShrineScreen<T extends AbstractContainerMenu> extends AbstractConta
     protected String icon;
     protected List<String> suggestions;
     protected static final int EFFECT_BOX_WIDTH = 227, NUMBER_BOX_WIDTH = 66, MAX_DISPLAYED_SUGGESTIONS = 5;
-    protected static int scrollOffset = 0;
+    protected int scrollOffset = 0, cooldownDelay = 5;
     protected boolean initialized = false, effectInvalid = false, translate = false;
     protected double iconX, iconY;
     protected static ResourceLocation backgroundTexture;
@@ -47,6 +47,7 @@ public class ShrineScreen<T extends AbstractContainerMenu> extends AbstractConta
     }
     @Override
     protected void containerTick() {
+        cooldownDelay -= cooldownDelay > 0 ? 1 : 0;
         effectBox.tick();
         amplifierBox.tick();
         durationBox.tick();
@@ -204,8 +205,7 @@ public class ShrineScreen<T extends AbstractContainerMenu> extends AbstractConta
                 onIconClick();
                 return true;
             }
-        }
-        if (mouseX >= leftPos + 8 && mouseX <= leftPos + 8 + EFFECT_BOX_WIDTH) {
+        } else if (mouseX >= leftPos + 8 && mouseX <= leftPos + 8 + EFFECT_BOX_WIDTH) {
             int suggestionCount = Math.min(MAX_DISPLAYED_SUGGESTIONS, suggestions.size());
             int suggestionYBottom = topPos + 50 + suggestionCount * 14;
             if (effectBox.isMouseOver(mouseX, mouseY) && button == 1) {
