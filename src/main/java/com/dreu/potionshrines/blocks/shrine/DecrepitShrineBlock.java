@@ -1,6 +1,8 @@
 package com.dreu.potionshrines.blocks.shrine;
 
+import com.dreu.potionshrines.blocks.shrine.aoe.AoEShrineBaseBlock;
 import com.dreu.potionshrines.config.General;
+import com.google.common.collect.ImmutableMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -21,7 +23,11 @@ import net.minecraft.world.level.block.state.properties.Half;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Function;
 
 import static com.dreu.potionshrines.config.General.OBTAINABLE;
 import static com.dreu.potionshrines.config.General.SHRINE_INDESTRUCTIBLE;
@@ -29,13 +35,22 @@ import static com.dreu.potionshrines.config.General.SHRINE_INDESTRUCTIBLE;
 public class DecrepitShrineBlock extends Block {
     public static final EnumProperty<Half> HALF = BlockStateProperties.HALF;
     public static final BooleanProperty PLAYER_PLACED = BooleanProperty.create("player_placed");
+    public final VoxelShape bottomShape;
+    public final VoxelShape topShape;
 
-    public DecrepitShrineBlock(Properties properties) {
+    public DecrepitShrineBlock(Properties properties, VoxelShape bottomShape, VoxelShape topShape) {
         super(properties);
         this.registerDefaultState(stateDefinition.any()
                 .setValue(HALF, Half.BOTTOM)
                 .setValue(PLAYER_PLACED, true)
         );
+        this.bottomShape = bottomShape;
+        this.topShape = topShape;
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext context) {
+        return blockState.getValue(HALF) == Half.BOTTOM ? bottomShape : topShape;
     }
 
     @Override
