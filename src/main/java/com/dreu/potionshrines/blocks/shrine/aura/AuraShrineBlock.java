@@ -2,7 +2,6 @@ package com.dreu.potionshrines.blocks.shrine.aura;
 
 import com.dreu.potionshrines.registry.PSBlockEntities;
 import com.dreu.potionshrines.registry.PSBlocks;
-import com.dreu.potionshrines.registry.PSTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
@@ -10,10 +9,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -30,7 +26,6 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.Half;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.PushReaction;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -41,7 +36,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-import static com.dreu.potionshrines.PotionShrines.getEffectFromString;
 import static com.dreu.potionshrines.blocks.shrine.simple.SimpleShrineBaseBlock.HALF;
 
 public class AuraShrineBlock extends Block implements EntityBlock {
@@ -90,7 +84,7 @@ public class AuraShrineBlock extends Block implements EntityBlock {
                 CompoundTag tag = new CompoundTag();
                 tag.putString("effect", shrine.getEffect());
                 tag.putInt("amplifier", shrine.getAmplifier());
-                tag.putInt("duration", shrine.getDuration());
+                tag.putInt("duration", shrine.getMaxDuration());
                 tag.putInt("max_cooldown", shrine.getMaxCooldown());
                 tag.putInt("radius", shrine.getRadius());
                 tag.putInt("remaining_cooldown", shrine.getRemainingCooldown());
@@ -137,26 +131,9 @@ public class AuraShrineBlock extends Block implements EntityBlock {
                 NetworkHooks.openScreen((ServerPlayer) player, shrine, blockPos);
             return InteractionResult.SUCCESS;
         } else if (shrine.canUse()) {
-            shrine.resetCooldown();
+            shrine.activateAura();
             if (!level.isClientSide) {
                 level.playSound(null, blockPos, SoundEvents.BEACON_DEACTIVATE, SoundSource.BLOCKS, 3F, 1F);
-                if (shrine.canEffectPlayers())
-                    level.getEntitiesOfClass(Player.class, new AABB(blockPos).inflate(shrine.getRadius())).stream()
-                        .filter(nearPlayer -> nearPlayer.blockPosition().distSqr(blockPos) <= shrine.getRadius() * shrine.getRadius())
-                        .toList().forEach(filteredPlayer ->
-                            filteredPlayer.addEffect(new MobEffectInstance(
-                                getEffectFromString(shrine.getEffect()),
-                                shrine.getDuration(),
-                                shrine.getAmplifier() - 1)));
-                if (shrine.canEffectMonsters())
-                    level.getEntitiesOfClass(LivingEntity.class, new AABB(blockPos).inflate(shrine.getRadius())).stream()
-                        .filter(nearEntity -> nearEntity.blockPosition().distSqr(blockPos) <= shrine.getRadius() * shrine.getRadius()
-                                && (nearEntity instanceof Monster || nearEntity.getType().getTags().toList().contains(PSTags.Entities.MONSTERS)))
-                        .toList().forEach(filteredMonster ->
-                            filteredMonster.addEffect(new MobEffectInstance(
-                                getEffectFromString(shrine.getEffect()),
-                                shrine.getDuration(),
-                                shrine.getAmplifier())));
             }
             return InteractionResult.SUCCESS;
         }

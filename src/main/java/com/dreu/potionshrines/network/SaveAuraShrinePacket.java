@@ -1,6 +1,5 @@
 package com.dreu.potionshrines.network;
 
-import com.dreu.potionshrines.screen.aoe.AoEShrineMenu;
 import com.dreu.potionshrines.screen.aura.AuraShrineMenu;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -57,7 +56,7 @@ public class SaveAuraShrinePacket {
             if (player != null && player.containerMenu instanceof AuraShrineMenu menu) {
                 menu.shrineEntity.setEffect(effect);
                 menu.shrineEntity.setAmplifier(amplifier);
-                menu.shrineEntity.setDuration(duration);
+                menu.shrineEntity.setMaxDuration(duration);
                 menu.shrineEntity.setMaxCooldown(maxCooldown);
                 menu.shrineEntity.setRadius(radius);
                 menu.shrineEntity.setCanEffectPlayers(effectPlayers);

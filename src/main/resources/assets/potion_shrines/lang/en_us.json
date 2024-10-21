@@ -7,6 +7,10 @@
   "block.potion_shrines.aoe_shrine": "AoE Shrine",
   "item.potion_shrines.aoe_shrine_decrepit": "Decrepit AoE Shrine",
   "block.potion_shrines.aoe_shrine_decrepit": "Decrepit AoE Shrine",
+  "item.potion_shrines.aura_shrine": "Aura Shrine",
+  "block.potion_shrines.aura_shrine": "Aura Shrine",
+  "item.potion_shrines.aura_shrine_decrepit": "Decrepit Aura Shrine",
+  "block.potion_shrines.aura_shrine_decrepit": "Decrepit Aura Shrine",
 
   "tooltip.potion_shrines.cooldown": "Cooldown",
   "tooltip.potion_shrines.radius": "Radius",

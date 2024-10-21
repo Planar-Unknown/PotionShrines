@@ -13,7 +13,7 @@ public class AuraShrine extends PSConfig {
 # If you want to reset this config to default, delete or move this file from the config folder and run the game
           
 # Effect = ID of the Potion Effect
-# Duration = How long the effect lasts in Seconds (Range: 1 - 999999)
+# AuraDuration = How many seconds the Aura will remain active after activation (Range: 1 - 999999)
 # Cooldown = How many seconds until players can use the Shrine again. (Range: 3 - 999999)
 # Replenish = Will the shrine replenish
 # Amplifier = Level of the effect (Range: 1 - 256)
@@ -27,7 +27,7 @@ public class AuraShrine extends PSConfig {
 # Example of a shrine that applies its effect to monsters
 [[Shrine]]
 Effect = "minecraft:poison"
-Duration = 20
+AuraDuration = 20
 Cooldown = 60
 Replenish = true
 Amplifier = 1
@@ -39,7 +39,7 @@ Icon = "poison"
           
 [[Shrine]]
 Effect = "minecraft:regeneration"
-Duration = 180
+AuraDuration = 180
 Cooldown = 180
 Replenish = true
 Amplifier = 2
@@ -51,7 +51,7 @@ Icon = "regeneration"
           
 [[Shrine]]
 Effect = "minecraft:health_boost"
-Duration = 300
+AuraDuration = 300
 Cooldown = 300
 Replenish = true
 Amplifier = 2
@@ -63,7 +63,7 @@ Icon = "health_boost"
           
 [[Shrine]]
 Effect = "minecraft:health_boost"
-Duration = 300
+AuraDuration = 300
 Cooldown = 300
 Replenish = true
 Amplifier = 3
@@ -75,7 +75,7 @@ Icon = "health_boost"
           
 [[Shrine]]
 Effect = "minecraft:health_boost"
-Duration = 60
+AuraDuration = 60
 Cooldown = 60
 Replenish = true
 Amplifier = 5
@@ -87,7 +87,7 @@ Icon = "health_boost"
           
 [[Shrine]]
 Effect = "minecraft:absorption"
-Duration = 300
+AuraDuration = 300
 Cooldown = 300
 Replenish = true
 Amplifier = 2
@@ -99,7 +99,7 @@ Icon = "absorption"
           
 [[Shrine]]
 Effect = "minecraft:absorption"
-Duration = 300
+AuraDuration = 300
 Cooldown = 300
 Replenish = true
 Amplifier = 3
@@ -111,7 +111,7 @@ Icon = "absorption"
           
 [[Shrine]]
 Effect = "minecraft:absorption"
-Duration = 60
+AuraDuration = 60
 Cooldown = 60
 Replenish = true
 Amplifier = 5
@@ -123,7 +123,7 @@ Icon = "absorption"
           
 [[Shrine]]
 Effect = "minecraft:jump_boost"
-Duration = 300
+AuraDuration = 300
 Cooldown = 300
 Replenish = true
 Amplifier = 2
@@ -135,7 +135,7 @@ Icon = "jump_boost"
           
 [[Shrine]]
 Effect = "minecraft:strength"
-Duration = 300
+AuraDuration = 300
 Cooldown = 300
 Replenish = true
 Amplifier = 1
@@ -147,7 +147,7 @@ Icon = "strength"
           
 [[Shrine]]
 Effect = "minecraft:strength"
-Duration = 180
+AuraDuration = 180
 Cooldown = 180
 Replenish = true
 Amplifier = 2
@@ -159,7 +159,7 @@ Icon = "strength"
           
 [[Shrine]]
 Effect = "minecraft:strength"
-Duration = 60
+AuraDuration = 60
 Cooldown = 60
 Replenish = true
 Amplifier = 3
@@ -171,7 +171,7 @@ Icon = "strength"
           
 [[Shrine]]
 Effect = "minecraft:invisibility"
-Duration = 300
+AuraDuration = 300
 Cooldown = 300
 Replenish = true
 Amplifier = 1
@@ -183,7 +183,7 @@ Icon = "invisibility"
           
 [[Shrine]]
 Effect = "minecraft:fire_resistance"
-Duration = 300
+AuraDuration = 300
 Cooldown = 300
 Replenish = true
 Amplifier = 1
@@ -195,7 +195,7 @@ Icon = "fire_resistance"
           
 [[Shrine]]
 Effect = "minecraft:speed"
-Duration = 300
+AuraDuration = 300
 Cooldown = 300
 Replenish = true
 Amplifier = 1
@@ -207,7 +207,7 @@ Icon = "speed"
           
 [[Shrine]]
 Effect = "minecraft:speed"
-Duration = 180
+AuraDuration = 180
 Cooldown = 180
 Replenish = true
 Amplifier = 2
@@ -219,7 +219,7 @@ Icon = "speed"
           
 [[Shrine]]
 Effect = "minecraft:speed"
-Duration = 60
+AuraDuration = 60
 Cooldown = 60
 Replenish = true
 Amplifier = 3
@@ -231,7 +231,7 @@ Icon = "speed"
           
 [[Shrine]]
 Effect = "minecraft:haste"
-Duration = 300
+AuraDuration = 300
 Cooldown = 300
 Replenish = true
 Amplifier = 1
@@ -243,7 +243,7 @@ Icon = "haste"
           
 [[Shrine]]
 Effect = "minecraft:haste"
-Duration = 180
+AuraDuration = 180
 Cooldown = 180
 Replenish = true
 Amplifier = 2
@@ -255,7 +255,7 @@ Icon = "haste"
           
 [[Shrine]]
 Effect = "minecraft:resistance"
-Duration = 180
+AuraDuration = 180
 Cooldown = 180
 Replenish = true
 Amplifier = 1
@@ -267,7 +267,7 @@ Icon = "resistance"
           
 [[Shrine]]
 Effect = "minecraft:resistance"
-Duration = 60
+AuraDuration = 60
 Cooldown = 60
 Replenish = true
 Amplifier = 2
@@ -279,7 +279,7 @@ Icon = "resistance"
           
 [[Shrine]]
 Effect = "minecraft:water_breathing"
-Duration = 300
+AuraDuration = 300
 Cooldown = 300
 Replenish = true
 Amplifier = 1
@@ -291,7 +291,7 @@ Icon = "water_breathing"
           
 [[Shrine]]
 Effect = "minecraft:resistance"
-Duration = 60
+AuraDuration = 60
 Cooldown = 60
 Replenish = true
 Amplifier = 2
@@ -303,7 +303,7 @@ Icon = "resistance"
           
 [[Shrine]]
 Effect = "minecraft:resistance"
-Duration = 60
+AuraDuration = 60
 Cooldown = 60
 Replenish = true
 Amplifier = 2
@@ -315,7 +315,7 @@ Icon = "resistance"
           
 [[Shrine]]
 Effect = "minecraft:slow_falling"
-Duration = 120
+AuraDuration = 120
 Cooldown = 120
 Replenish = true
 Amplifier = 1
@@ -327,7 +327,7 @@ Icon = "slow_falling"
                          
 [[Shrine]]
 Effect = "minecraft:wither"
-Duration = 120
+AuraDuration = 120
 Cooldown = 120
 Replenish = true
 Amplifier = 2
@@ -339,7 +339,7 @@ Icon = "wither"
 
 [[Shrine]]
 Effect = "minecraft:levitation"
-Duration = 20
+AuraDuration = 20
 Cooldown = 120
 Replenish = true
 Amplifier = 1

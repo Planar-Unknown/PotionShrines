@@ -1,7 +1,6 @@
 package com.dreu.potionshrines.screen.aura;
 
 import com.dreu.potionshrines.network.PacketHandler;
-import com.dreu.potionshrines.network.SaveAoEShrinePacket;
 import com.dreu.potionshrines.network.SaveAuraShrinePacket;
 import com.dreu.potionshrines.screen.IconScreen;
 import com.dreu.potionshrines.screen.IconSelectionMenu;
@@ -69,7 +68,7 @@ public class AuraShrineScreen extends ShrineScreen<AuraShrineMenu> implements Ic
             durationBox.setTextColor(0xFFFFFF);
             durationBox.setResponder(this::onDurationChanged);
             durationBox.setFilter((s -> s.matches("\\d*")));
-            durationBox.setValue(String.valueOf(menu.shrineEntity.getDuration() / 20));
+            durationBox.setValue(String.valueOf(menu.shrineEntity.getMaxDuration() / 20));
 
 
             maxCooldownBox = new EditBox(font, leftPos + 148, topPos + 66, NUMBER_BOX_WIDTH, EDIT_BOX_HEIGHT, Component.literal(""));
@@ -190,7 +189,7 @@ public class AuraShrineScreen extends ShrineScreen<AuraShrineMenu> implements Ic
     protected void onResetClick(Button button) {
         effectBox.setValue(menu.shrineEntity.getEffect());
         amplifierBox.setValue(String.valueOf(menu.shrineEntity.getAmplifier()));
-        durationBox.setValue(String.valueOf(menu.shrineEntity.getDuration() / 20));
+        durationBox.setValue(String.valueOf(menu.shrineEntity.getMaxDuration() / 20));
         maxCooldownBox.setValue(String.valueOf(menu.shrineEntity.getMaxCooldown() / 20));
         radiusBox.setValue(String.valueOf(menu.shrineEntity.getRadius()));
         icon = menu.shrineEntity.getIcon();
@@ -210,7 +209,7 @@ public class AuraShrineScreen extends ShrineScreen<AuraShrineMenu> implements Ic
         if (!amplifierBox.getValue().isEmpty())
             menu.shrineEntity.setAmplifier(parseInt(amplifierBox.getValue()));
         if (!durationBox.getValue().isEmpty())
-            menu.shrineEntity.setDuration(parseInt(durationBox.getValue()) * 20);
+            menu.shrineEntity.setMaxDuration(parseInt(durationBox.getValue()) * 20);
         if (!maxCooldownBox.getValue().isEmpty())
             menu.shrineEntity.setMaxCooldown(parseInt(maxCooldownBox.getValue()) * 20);
         if (!radiusBox.getValue().isEmpty())
@@ -222,7 +221,7 @@ public class AuraShrineScreen extends ShrineScreen<AuraShrineMenu> implements Ic
         PacketHandler.CHANNEL.sendToServer(new SaveAuraShrinePacket(
                 effectBox.getValue(),
                 menu.shrineEntity.getAmplifier(),
-                menu.shrineEntity.getDuration(),
+                menu.shrineEntity.getMaxDuration(),
                 menu.shrineEntity.getMaxCooldown(),
                 menu.shrineEntity.getRadius(),
                 menu.shrineEntity.canEffectPlayers(),

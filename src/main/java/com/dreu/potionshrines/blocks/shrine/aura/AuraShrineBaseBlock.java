@@ -33,25 +33,57 @@ import static com.dreu.potionshrines.config.General.OBTAINABLE;
 public class AuraShrineBaseBlock extends Block {
     public static final EnumProperty<Half> HALF = BlockStateProperties.HALF;
     public static final VoxelShape BOTTOM_SHAPE =
-                Shapes.join(
                     Shapes.join(
-                        Block.box(1, 0, 1, 15, 4, 15),
-                        Block.box(2, 4, 2, 14, 10, 14), BooleanOp.OR),
-                    Shapes.join(
-                        Block.box(3, 10, 3, 13, 20, 13),
-                        Block.box(2, 20, 2, 14, 31,14), BooleanOp.OR),
-                    BooleanOp.OR
-                );
+                            Shapes.join(
+                                    Shapes.join(
+                                            Block.box(1, 0, 1, 3, 9, 3),
+                                            Block.box(2, 0.66, 2, 4, 30.66, 4), BooleanOp.OR),
+                                    Shapes.join(
+                                            Block.box(3, 1.66, 3, 13, 6.66, 13),
+                                            Block.box(4, 6.66, 4, 12, 7.33,12), BooleanOp.OR),
+                                    BooleanOp.OR
+                            ),
+                            Shapes.join(
+                                    Shapes.join(
+                                            Block.box(5, 7.33, 5, 11, 7.66, 11),
+                                            Block.box(6, 7.66, 6, 10, 28.499, 10), BooleanOp.OR),
+                                    Shapes.join(
+                                            Block.box(5, 23.66, 5, 11, 24, 11),
+                                            Block.box(4, 24, 4, 12, 24.66, 12), BooleanOp.OR),
+                                    BooleanOp.OR
+                            ),
+                            BooleanOp.OR
+                    );
     public static final VoxelShape TOP_SHAPE =
             Shapes.join(
                     Shapes.join(
-                        Block.box(1, -16, 1, 15, -12, 15),
-                        Block.box(2, -12, 2, 14, -6, 14), BooleanOp.OR),
+                            Shapes.join(
+                                    Shapes.join(
+                                            Block.box(12, -15.34, 2, 14, 14.66, 4),
+                                            Block.box(2, -15.34, 2, 4, 14.66, 4), BooleanOp.OR),
+                                    Shapes.join(
+                                            Block.box(3, -14.34, 3, 13, -9.34, 13),
+                                            Block.box(4, -9.34, 4, 12, -8.67, 12), BooleanOp.OR),
+                                    BooleanOp.OR
+                            ),
+                            Shapes.join(
+                                    Shapes.join(
+                                            Block.box(5, -8.67, 5, 11, -8.34, 11),
+                                            Block.box(6, -8.34, 6, 10, 12.499, 10), BooleanOp.OR),
+                                    Shapes.join(
+                                            Block.box(5, 7.66, 5, 11, 8, 11),
+                                            Block.box(4, 8, 4, 12, 8.66, 12), BooleanOp.OR),
+                                    BooleanOp.OR
+                            ),
+                            BooleanOp.OR
+                    ),
                     Shapes.join(
-                        Block.box(3, -16, 3, 13, 4, 13),
-                        Block.box(2, 4, 2, 14, 15,14), BooleanOp.OR),
-                    BooleanOp.OR
-                );
+                            Shapes.join(
+                                    Block.box(12, -15.34, 12, 14, 14.66, 14),
+                                    Block.box(2, -15.34, 12, 4, 14.66, 14), BooleanOp.OR),
+                            Block.box(3, 8.66, 3, 13, 13.66, 13), BooleanOp.OR
+                    ), BooleanOp.OR
+            );
         public static final VoxelShape COLLISION_SHAPE = Block.box(2, 0, 2, 14, 16, 14);
 
 

@@ -42,64 +42,78 @@ public class AuraShrineRenderer implements BlockEntityRenderer<AuraShrineBlockEn
                 poseStack.popPose();
             } else if (cooldown < 40) {
                 //Animation on replenish
-                poseStack.pushPose();
-                poseStack.translate(0.5, -cooldown * 0.01, 0.5);
-                poseStack.translate(0, Math.sin((auraShrine.getLevel().getGameTime() + partialTicks) * 0.05) * 0.1, 0);
-                float normalizedCooldown = cooldown / 39.0f;
-                poseStack.scale(1 - normalizedCooldown * normalizedCooldown, 1 - normalizedCooldown * normalizedCooldown, 1 - normalizedCooldown * normalizedCooldown);
-                poseStack.mulPose(Vector3f.YP.rotationDegrees(((auraShrine.getLevel().getGameTime() + partialTicks) - 3600 * normalizedCooldown * normalizedCooldown) % 360));  // Apply rotation around the Y-axis
-
-                RenderSystem.setShader(GameRenderer::getRendertypeItemEntityTranslucentCullShader);
-                RenderSystem.enableDepthTest();
-
-                poseStack.scale(0.88889f, 0.88889f, 0.88889f);
-                poseStack.translate(-0.5, 0, -0.5);
-
-                ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-                itemRenderer.renderModelLists(getBakedIconOrDefault(auraShrine.getIcon()), ItemStack.EMPTY, 0xF000F0, combinedOverlay, poseStack, bufferSource.getBuffer(RenderType.cutout()));
-
-                poseStack.popPose();
+                renderReplenishAnim(auraShrine, partialTicks, poseStack, bufferSource, combinedOverlay, cooldown);
             } else if (cooldown > auraShrine.getMaxCooldown() - 20) {
                 //Animation on use
-                cooldown = auraShrine.getMaxCooldown() - cooldown;
-                poseStack.pushPose();
-                poseStack.translate(0.5, cooldown * 0.04 + 0.1, 0.5);
-                poseStack.translate(0, Math.sin((auraShrine.getLevel().getGameTime() + partialTicks) * 0.05) * 0.1, 0);
-                float normalizedCooldown = cooldown / 19.0f;
-                poseStack.scale(1 - normalizedCooldown * normalizedCooldown, 1 - normalizedCooldown * normalizedCooldown, 1 - normalizedCooldown * normalizedCooldown);
-                poseStack.mulPose(Vector3f.YP.rotationDegrees(((auraShrine.getLevel().getGameTime() + partialTicks) - 1800 * normalizedCooldown * normalizedCooldown) % 360));  // Apply rotation around the Y-axis
-
-                RenderSystem.setShader(GameRenderer::getRendertypeItemEntityTranslucentCullShader);
-                RenderSystem.enableDepthTest();
-
-                poseStack.scale(0.88889f, 0.88889f, 0.88889f);
-                poseStack.translate(-0.5, 0, -0.5);
-
-                ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-                itemRenderer.renderModelLists(getBakedIconOrDefault(auraShrine.getIcon()), ItemStack.EMPTY, 0xF000F0, combinedOverlay, poseStack, bufferSource.getBuffer(RenderType.cutout()));
-
-                poseStack.popPose();
-                uvY = 1 - normalizedCooldown;
+                uvY = renderUseAnim(auraShrine, partialTicks, poseStack, bufferSource, combinedOverlay, cooldown);
             }
-            RenderSystem.enableDepthTest();
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            RenderSystem.setShaderTexture(0, new ResourceLocation("potion_shrines", "textures/block/aoe_recharging.png"));
-            poseStack.pushPose();
-
-            poseStack.translate(0.5, -1.4375, 0.5);
-            BufferBuilder buffer = Tesselator.getInstance().getBuilder();
-
-            buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-            for (int i = 0; i < 4; i++) {
-                buffer.vertex(poseStack.last().pose(), -0.125f, 0.0f, 0.2501f).uv(0, 1).endVertex();
-                buffer.vertex(poseStack.last().pose(), 0.125f, 0.0f, 0.2501f).uv(1, 1).endVertex();
-                buffer.vertex(poseStack.last().pose(), 0.125f, uvY, 0.2501f).uv(1, 1 - uvY).endVertex();
-                buffer.vertex(poseStack.last().pose(), -0.125f, uvY, 0.2501f).uv(0, 1 - uvY).endVertex();
-                poseStack.mulPose(Vector3f.YP.rotationDegrees(90));
-            }
-            Tesselator.getInstance().end();
-
-            poseStack.popPose();
+            renderFullCharge(poseStack, uvY);
         }
+    }
+
+    private static void renderReplenishAnim(AuraShrineBlockEntity auraShrine, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int combinedOverlay, float cooldown) {
+        poseStack.pushPose();
+        poseStack.translate(0.5, -cooldown * 0.01, 0.5);
+        poseStack.translate(0, Math.sin((auraShrine.getLevel().getGameTime() + partialTicks) * 0.05) * 0.1, 0);
+        float normalizedCooldown = cooldown / 39.0f;
+        poseStack.scale(1 - normalizedCooldown * normalizedCooldown, 1 - normalizedCooldown * normalizedCooldown, 1 - normalizedCooldown * normalizedCooldown);
+        poseStack.mulPose(Vector3f.YP.rotationDegrees(((auraShrine.getLevel().getGameTime() + partialTicks) - 3600 * normalizedCooldown * normalizedCooldown) % 360));  // Apply rotation around the Y-axis
+
+        RenderSystem.setShader(GameRenderer::getRendertypeItemEntityTranslucentCullShader);
+        RenderSystem.enableDepthTest();
+
+        poseStack.scale(0.88889f, 0.88889f, 0.88889f);
+        poseStack.translate(-0.5, 0, -0.5);
+
+        ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
+        itemRenderer.renderModelLists(getBakedIconOrDefault(auraShrine.getIcon()), ItemStack.EMPTY, 0xF000F0, combinedOverlay, poseStack, bufferSource.getBuffer(RenderType.cutout()));
+
+        poseStack.popPose();
+    }
+
+    private static float renderUseAnim(AuraShrineBlockEntity auraShrine, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int combinedOverlay, float cooldown) {
+        float uvY;
+        cooldown = auraShrine.getMaxCooldown() - cooldown;
+        poseStack.pushPose();
+        poseStack.translate(0.5, cooldown * 0.04 + 0.1, 0.5);
+        poseStack.translate(0, Math.sin((auraShrine.getLevel().getGameTime() + partialTicks) * 0.05) * 0.1, 0);
+        float normalizedCooldown = cooldown / 19.0f;
+        poseStack.scale(1 - normalizedCooldown * normalizedCooldown, 1 - normalizedCooldown * normalizedCooldown, 1 - normalizedCooldown * normalizedCooldown);
+        poseStack.mulPose(Vector3f.YP.rotationDegrees(((auraShrine.getLevel().getGameTime() + partialTicks) - 1800 * normalizedCooldown * normalizedCooldown) % 360));  // Apply rotation around the Y-axis
+
+        RenderSystem.setShader(GameRenderer::getRendertypeItemEntityTranslucentCullShader);
+        RenderSystem.enableDepthTest();
+
+        poseStack.scale(0.88889f, 0.88889f, 0.88889f);
+        poseStack.translate(-0.5, 0, -0.5);
+
+        ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
+        itemRenderer.renderModelLists(getBakedIconOrDefault(auraShrine.getIcon()), ItemStack.EMPTY, 0xF000F0, combinedOverlay, poseStack, bufferSource.getBuffer(RenderType.cutout()));
+
+        poseStack.popPose();
+        uvY = 1 - normalizedCooldown;
+        return uvY;
+    }
+
+    private static void renderFullCharge(PoseStack poseStack, float uvY) {
+        RenderSystem.enableDepthTest();
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderTexture(0, new ResourceLocation("potion_shrines", "textures/block/aoe_recharging.png"));
+        poseStack.pushPose();
+
+        poseStack.translate(0.5, -1.4375, 0.5);
+        BufferBuilder buffer = Tesselator.getInstance().getBuilder();
+
+        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        for (int i = 0; i < 4; i++) {
+            buffer.vertex(poseStack.last().pose(), -0.125f, 0.0f, 0.1251f).uv(0, 1).endVertex();
+            buffer.vertex(poseStack.last().pose(), 0.125f, 0.0f, 0.1251f).uv(1, 1).endVertex();
+            buffer.vertex(poseStack.last().pose(), 0.125f, uvY, 0.1251f).uv(1, 1 - uvY).endVertex();
+            buffer.vertex(poseStack.last().pose(), -0.125f, uvY, 0.1251f).uv(0, 1 - uvY).endVertex();
+            poseStack.mulPose(Vector3f.YP.rotationDegrees(90));
+        }
+        Tesselator.getInstance().end();
+
+        poseStack.popPose();
     }
 }
