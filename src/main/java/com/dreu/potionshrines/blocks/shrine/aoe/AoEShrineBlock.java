@@ -43,6 +43,7 @@ import java.util.Optional;
 
 import static com.dreu.potionshrines.PotionShrines.getEffectFromString;
 import static com.dreu.potionshrines.blocks.shrine.simple.SimpleShrineBaseBlock.HALF;
+import static net.minecraft.world.level.block.state.properties.Half.TOP;
 
 public class AoEShrineBlock extends Block implements EntityBlock {
     public static final IntegerProperty LIGHT_LEVEL = IntegerProperty.create("light_level", 0, 15);
@@ -137,32 +138,57 @@ public class AoEShrineBlock extends Block implements EntityBlock {
                 NetworkHooks.openScreen((ServerPlayer) player, shrine, blockPos);
             return InteractionResult.SUCCESS;
         } else if (shrine.canUse()) {
-            shrine.resetCooldown();
-            if (!level.isClientSide) {
-                level.playSound(null, blockPos, SoundEvents.BEACON_DEACTIVATE, SoundSource.BLOCKS, 3F, 1F);
-                if (shrine.canEffectPlayers())
-                    level.getEntitiesOfClass(Player.class, new AABB(blockPos).inflate(shrine.getRadius())).stream()
-                        .filter(nearPlayer -> nearPlayer.blockPosition().distSqr(blockPos) <= shrine.getRadius() * shrine.getRadius())
-                        .toList().forEach(filteredPlayer ->
-                            filteredPlayer.addEffect(new MobEffectInstance(
-                                getEffectFromString(shrine.getEffect()),
-                                shrine.getDuration(),
-                                shrine.getAmplifier() - 1)));
-                if (shrine.canEffectMonsters())
-                    level.getEntitiesOfClass(LivingEntity.class, new AABB(blockPos).inflate(shrine.getRadius())).stream()
-                        .filter(nearEntity -> nearEntity.blockPosition().distSqr(blockPos) <= shrine.getRadius() * shrine.getRadius()
-                                && (nearEntity instanceof Monster || nearEntity.getType().getTags().toList().contains(PSTags.Entities.MONSTERS)))
-                        .toList().forEach(filteredMonster ->
-                            filteredMonster.addEffect(new MobEffectInstance(
-                                getEffectFromString(shrine.getEffect()),
-                                shrine.getDuration(),
-                                shrine.getAmplifier())));
-            }
+            useShrine(level, blockPos, shrine);
             return InteractionResult.SUCCESS;
         }
         return super.use(blockState, level, blockPos, player, interactionHand, blockHitResult);
     }
 
+    public static void useShrine(Level level, BlockPos blockPos, AoEShrineBlockEntity shrine){
+        shrine.resetCooldown();
+        if (!level.isClientSide) {
+            level.markAndNotifyBlock(blockPos.below(1), level.getChunkAt(blockPos.below(1)), shrine.getBlockState(), PSBlocks.AOE_SHRINE_BASE.get().defaultBlockState().setValue(HALF, TOP), 11, 512);
+            level.markAndNotifyBlock(blockPos.below(2), level.getChunkAt(blockPos.below(2)), shrine.getBlockState(), PSBlocks.AOE_SHRINE_BASE.get().defaultBlockState(), 11, 512);
+            level.playSound(null, blockPos, SoundEvents.BEACON_DEACTIVATE, SoundSource.BLOCKS, 3F, 1F);
+            if (shrine.canEffectPlayers())
+                level.getEntitiesOfClass(Player.class, new AABB(blockPos).inflate(shrine.getRadius())).stream()
+                        .filter(nearPlayer -> nearPlayer.blockPosition().distSqr(blockPos) <= shrine.getRadius() * shrine.getRadius())
+                        .toList().forEach(filteredPlayer ->
+                                filteredPlayer.addEffect(new MobEffectInstance(
+                                        getEffectFromString(shrine.getEffect()),
+                                        shrine.getDuration(),
+                                        shrine.getAmplifier() - 1)));
+            if (shrine.canEffectMonsters())
+                level.getEntitiesOfClass(LivingEntity.class, new AABB(blockPos).inflate(shrine.getRadius())).stream()
+                        .filter(nearEntity -> nearEntity.blockPosition().distSqr(blockPos) <= shrine.getRadius() * shrine.getRadius()
+                                && (nearEntity instanceof Monster || nearEntity.getType().getTags().toList().contains(PSTags.Entities.MONSTERS)))
+                        .toList().forEach(filteredMonster ->
+                                filteredMonster.addEffect(new MobEffectInstance(
+                                        getEffectFromString(shrine.getEffect()),
+                                        shrine.getDuration(),
+                                        shrine.getAmplifier())));
+        }
+    }
+
+    @Override
+    public boolean hasAnalogOutputSignal(BlockState blockState) {
+        return true;
+    }
+
+    @Override
+    public int getAnalogOutputSignal(BlockState blockState, Level level, BlockPos blockPos) {
+        if (level.getBlockEntity(blockPos) instanceof AoEShrineBlockEntity shrine){
+            return (int) (15f - ((float) shrine.getRemainingCooldown() / shrine.getMaxCooldown()) * 15f);
+        };
+        return super.getAnalogOutputSignal(blockState, level, blockPos);
+    }
+
+    @Override
+    public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, BlockPos blockPos1, boolean b) {
+        if (level.hasNeighborSignal(blockPos) && level.getBlockEntity(blockPos) instanceof AoEShrineBlockEntity shrine && shrine.canUse()){
+            useShrine(level, blockPos, shrine);
+        }
+    }
     @Override
     public void onPlace(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState1, boolean b) {
         level.setBlock(blockPos.below(1), PSBlocks.AOE_SHRINE_BASE.get().defaultBlockState().setValue(HALF, Half.TOP), 11);

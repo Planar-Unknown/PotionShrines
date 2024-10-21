@@ -96,10 +96,12 @@ public class AoEShrineBlockEntity extends BlockEntity implements MenuProvider {
                 }
                 shrine.setRemainingCooldown(shrine.remainingCooldown - 1);
                 setChanged(level, blockPos, blockState);
+                updateBase(level, blockPos, blockState);
             } else if (shrine.remainingCooldown > 0) {
                 shrine.setRemainingCooldown(shrine.remainingCooldown - 1);
                 setChanged(level, blockPos, blockState);
-                level.setBlock(blockPos, blockState.setValue(LIGHT_LEVEL, 15 - shrine.remainingCooldown / 2), 11);
+                updateBase(level, blockPos, blockState);
+                level.setBlock(blockPos, blockState.setValue(LIGHT_LEVEL,  Mth.clamp(15 - shrine.remainingCooldown / 2, 0, 15)), 11);
             } else {
                 if (shrine.getLevel().getGameTime() % 2 == 1) {
                     Vector3f color = new Vector3f(
@@ -118,11 +120,18 @@ public class AoEShrineBlockEntity extends BlockEntity implements MenuProvider {
                                 color.x(), color.y(), color.z());
                     }
                 }
-                if (!level.isClientSide)
+                if (!level.isClientSide && blockState.getValue(LIGHT_LEVEL) != 15) {
                     level.setBlock(blockPos, blockState.setValue(LIGHT_LEVEL, 15), 11);
+                }
             }
         }
     }
+
+    protected static void updateBase(Level level, BlockPos blockPos, BlockState blockState){
+        level.updateNeighborsAt(blockPos.below(1), PSBlocks.AOE_SHRINE_BASE.get());
+        level.updateNeighborsAt(blockPos.below(2), PSBlocks.AOE_SHRINE_BASE.get());
+    }
+
     @Override
     protected void saveAdditional(CompoundTag nbt) {
         nbt.putString("effect", effect);

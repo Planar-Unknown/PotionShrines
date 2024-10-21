@@ -3,7 +3,7 @@ package com.dreu.potionshrines.blocks.shrine.aoe;
 import com.dreu.potionshrines.config.General;
 import com.dreu.potionshrines.registry.PSBlocks;
 import net.minecraft.core.BlockPos;
-import net.minecraft.util.RandomSource;
+import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -12,6 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
@@ -29,7 +30,9 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import static com.dreu.potionshrines.blocks.shrine.aoe.AoEShrineBlock.useShrine;
 import static com.dreu.potionshrines.config.General.OBTAINABLE;
+import static net.minecraft.world.level.block.state.properties.Half.BOTTOM;
 
 public class AoEShrineBaseBlock extends Block {
     public static final EnumProperty<Half> HALF = BlockStateProperties.HALF;
@@ -59,7 +62,7 @@ public class AoEShrineBaseBlock extends Block {
     public AoEShrineBaseBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(stateDefinition.any()
-                .setValue(HALF, Half.BOTTOM));
+                .setValue(HALF, BOTTOM));
     }
 
     @Override
@@ -71,6 +74,19 @@ public class AoEShrineBaseBlock extends Block {
     @Override
     public ItemStack getCloneItemStack(BlockState blockState, HitResult target, BlockGetter level, BlockPos blockPos, Player player) {
         return level.getBlockState(blockPos.above()).getBlock().getCloneItemStack(level.getBlockState(blockPos.above()), target, level, blockPos.above(), player);
+    }
+
+    @Override
+    public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, BlockPos blockPos1, boolean b) {
+        BlockPos shrinePos = blockPos.above(blockState.getValue(HALF) == BOTTOM ? 2 : 1);
+        if (level.hasNeighborSignal(blockPos) && level.getBlockEntity(shrinePos) instanceof AoEShrineBlockEntity shrine && shrine.canUse()){
+            useShrine(level, shrinePos, shrine);
+        }
+    }
+
+    @Override
+    public boolean shouldCheckWeakPower(BlockState state, LevelReader level, BlockPos pos, Direction side) {
+        return false;
     }
 
     @Override
@@ -93,7 +109,7 @@ public class AoEShrineBaseBlock extends Block {
     }
     @Override
     public boolean onDestroyedByPlayer(BlockState blockState, Level level, BlockPos blockPos, Player player, boolean willHarvest, FluidState fluid) {
-        BlockPos shrinePos = blockPos.above(blockState.getValue(HALF) == Half.BOTTOM ? 2 : 1);
+        BlockPos shrinePos = blockPos.above(blockState.getValue(HALF) == BOTTOM ? 2 : 1);
         if (level.getBlockEntity(shrinePos) != null && !level.isClientSide) {
             if (OBTAINABLE && !player.isCreative()) {
                 ItemStack drop = new ItemStack(this);
@@ -130,9 +146,16 @@ public class AoEShrineBaseBlock extends Block {
 
     @Override
     public void onPlace(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState1, boolean b) {
-        level.setBlock(blockPos.above(), blockState.getValue(HALF) == Half.BOTTOM
+        level.setBlock(blockPos.above(), blockState.getValue(HALF) == BOTTOM
                 ? PSBlocks.AOE_SHRINE_BASE.get().defaultBlockState().setValue(HALF, Half.TOP)
                 : PSBlocks.AOE_SHRINE.get().defaultBlockState(), 11);
+    }
+    @Override
+    public boolean hasAnalogOutputSignal(BlockState blockState) {return true;}
+
+    @Override
+    public int getAnalogOutputSignal(BlockState blockState, Level level, BlockPos blockPos) {
+        return level.getBlockState(blockPos.above()).getAnalogOutputSignal(level, blockPos.above());
     }
 
     @Override
