@@ -42,7 +42,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
 import static com.dreu.potionshrines.PotionShrines.getEffectFromString;
-import static com.dreu.potionshrines.blocks.shrine.simple.SimpleShrineBaseBlock.HALF;
+import static com.dreu.potionshrines.blocks.shrine.ShrineBaseBlock.HALF;
 import static net.minecraft.world.level.block.state.properties.Half.TOP;
 
 public class AoEShrineBlock extends Block implements EntityBlock {

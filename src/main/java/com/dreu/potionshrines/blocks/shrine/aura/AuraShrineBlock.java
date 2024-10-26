@@ -36,7 +36,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-import static com.dreu.potionshrines.blocks.shrine.simple.SimpleShrineBaseBlock.HALF;
+import static com.dreu.potionshrines.blocks.shrine.ShrineBaseBlock.HALF;
 
 public class AuraShrineBlock extends Block implements EntityBlock {
     public static final IntegerProperty LIGHT_LEVEL = IntegerProperty.create("light_level", 0, 15);

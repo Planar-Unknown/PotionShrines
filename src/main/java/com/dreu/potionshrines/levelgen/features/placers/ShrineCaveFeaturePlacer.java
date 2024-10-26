@@ -9,7 +9,7 @@ import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 
-import static com.dreu.potionshrines.blocks.shrine.simple.SimpleShrineBaseBlock.HALF;
+import static com.dreu.potionshrines.blocks.shrine.ShrineBaseBlock.HALF;
 
 public class ShrineCaveFeaturePlacer extends Feature<NoneFeatureConfiguration> {
     private final Block base;

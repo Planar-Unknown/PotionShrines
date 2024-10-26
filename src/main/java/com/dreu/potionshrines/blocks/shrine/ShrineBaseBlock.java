@@ -1,7 +1,6 @@
-package com.dreu.potionshrines.blocks.shrine.aura;
+package com.dreu.potionshrines.blocks.shrine;
 
 import com.dreu.potionshrines.config.General;
-import com.dreu.potionshrines.registry.PSBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -30,31 +29,75 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 import static com.dreu.potionshrines.config.General.OBTAINABLE;
 
-public class AuraShrineBaseBlock extends Block {
-    public static final EnumProperty<Half> HALF = BlockStateProperties.HALF;
-    public static final VoxelShape BOTTOM_SHAPE =
+public class ShrineBaseBlock extends Block {
+    public static final VoxelShape SIMPLE_BOTTOM_SHAPE =
+            Shapes.join(
+                Shapes.join(
+                    Shapes.join(
+                            Block.box(1, 0, 1, 15, 2, 15),
+                            Block.box(2, 2, 2, 14, 4, 14), BooleanOp.OR),
+                    Shapes.join(
+                        Block.box(3, 4, 3, 13, 11, 13),
+                        Block.box(4, 11, 4, 12, 28,12), BooleanOp.OR),
+                    BooleanOp.OR
+                ),
+                Shapes.join(
+                    Shapes.join(
+                        Block.box(3, 28, 3, 13, 29, 13),
+                        Block.box(2, 29, 2, 14, 31, 14), BooleanOp.OR),
+                    Shapes.join(
+                        Block.box(2, 31, 1, 14, 32, 15),
+                        Block.box(1, 31, 2, 15, 32, 14), BooleanOp.OR),
+                    BooleanOp.OR
+                ),
+                BooleanOp.OR
+            );
+    public static final VoxelShape SIMPLE_TOP_SHAPE =
+            Shapes.join(
+                Shapes.join(
+                    Shapes.join(
+                        Block.box(1, -16, 1, 15, -14, 15),
+                        Block.box(2, -14, 2, 14, -12, 14), BooleanOp.OR),
+                    Shapes.join(
+                        Block.box(3, -12, 3, 13, -5, 13),
+                        Block.box(4, -5, 4, 12, 12,12), BooleanOp.OR),
+                    BooleanOp.OR
+                ),
+                Shapes.join(
+                    Shapes.join(
+                        Block.box(3, 12, 3, 13, 13, 13),
+                        Block.box(2, 13, 2, 14, 15, 14), BooleanOp.OR),
+                    Shapes.join(
+                        Block.box(2, 15, 1, 14, 16, 15),
+                        Block.box(1, 15, 2, 15, 16, 14), BooleanOp.OR),
+                    BooleanOp.OR
+                ),
+                BooleanOp.OR
+            );
+
+    public static final VoxelShape AURA_BOTTOM_SHAPE =
+            Shapes.join(
                     Shapes.join(
                             Shapes.join(
-                                    Shapes.join(
-                                            Block.box(1, 0, 1, 3, 9, 3),
-                                            Block.box(2, 0.66, 2, 4, 30.66, 4), BooleanOp.OR),
-                                    Shapes.join(
-                                            Block.box(3, 1.66, 3, 13, 6.66, 13),
-                                            Block.box(4, 6.66, 4, 12, 7.33,12), BooleanOp.OR),
-                                    BooleanOp.OR
-                            ),
+                                    Block.box(1, 0, 1, 3, 9, 3),
+                                    Block.box(2, 0.66, 2, 4, 30.66, 4), BooleanOp.OR),
                             Shapes.join(
-                                    Shapes.join(
-                                            Block.box(5, 7.33, 5, 11, 7.66, 11),
-                                            Block.box(6, 7.66, 6, 10, 28.499, 10), BooleanOp.OR),
-                                    Shapes.join(
-                                            Block.box(5, 23.66, 5, 11, 24, 11),
-                                            Block.box(4, 24, 4, 12, 24.66, 12), BooleanOp.OR),
-                                    BooleanOp.OR
-                            ),
+                                    Block.box(3, 1.66, 3, 13, 6.66, 13),
+                                    Block.box(4, 6.66, 4, 12, 7.33,12), BooleanOp.OR),
                             BooleanOp.OR
-                    );
-    public static final VoxelShape TOP_SHAPE =
+                    ),
+                    Shapes.join(
+                            Shapes.join(
+                                    Block.box(5, 7.33, 5, 11, 7.66, 11),
+                                    Block.box(6, 7.66, 6, 10, 28.499, 10), BooleanOp.OR),
+                            Shapes.join(
+                                    Block.box(5, 23.66, 5, 11, 24, 11),
+                                    Block.box(4, 24, 4, 12, 24.66, 12), BooleanOp.OR),
+                            BooleanOp.OR
+                    ),
+                    BooleanOp.OR
+            );
+    public static final VoxelShape AURA_TOP_SHAPE =
             Shapes.join(
                     Shapes.join(
                             Shapes.join(
@@ -84,20 +127,51 @@ public class AuraShrineBaseBlock extends Block {
                             Block.box(3, 8.66, 3, 13, 13.66, 13), BooleanOp.OR
                     ), BooleanOp.OR
             );
-        public static final VoxelShape COLLISION_SHAPE = Block.box(2, 0, 2, 14, 16, 14);
 
+    public static final VoxelShape AOE_BOTTOM_SHAPE =
+            Shapes.join(
+                    Shapes.join(
+                            Block.box(1, 0, 1, 15, 4, 15),
+                            Block.box(2, 4, 2, 14, 10, 14), BooleanOp.OR),
+                    Shapes.join(
+                            Block.box(3, 10, 3, 13, 20, 13),
+                            Block.box(2, 20, 2, 14, 31,14), BooleanOp.OR),
+                    BooleanOp.OR
+            );
+    public static final VoxelShape AOE_TOP_SHAPE =
+            Shapes.join(
+                    Shapes.join(
+                            Block.box(1, -16, 1, 15, -12, 15),
+                            Block.box(2, -12, 2, 14, -6, 14), BooleanOp.OR),
+                    Shapes.join(
+                            Block.box(3, -16, 3, 13, 4, 13),
+                            Block.box(2, 4, 2, 14, 15,14), BooleanOp.OR),
+                    BooleanOp.OR
+            );
 
-    public AuraShrineBaseBlock(Properties properties) {
+    public static final VoxelShape SIMPLE_COLLISION_SHAPE = Block.box(2, 0, 2, 14, 16, 14);
+    public static final VoxelShape AURA_COLLISION_SHAPE = Block.box(3, 0, 3, 13, 16, 13);
+
+    public static final EnumProperty<Half> HALF = BlockStateProperties.HALF;
+    protected final Block shrineBlock;
+    protected final VoxelShape topShape;
+    protected final VoxelShape bottomShape;
+    protected final VoxelShape collisionShape;
+
+    public ShrineBaseBlock(Properties properties, Block shrineBlock, VoxelShape topShape, VoxelShape bottomShape, VoxelShape collisionShape) {
         super(properties);
+        this.shrineBlock = shrineBlock;
+        this.topShape = topShape;
+        this.bottomShape = bottomShape;
+        this.collisionShape = collisionShape;
         this.registerDefaultState(stateDefinition.any()
                 .setValue(HALF, Half.BOTTOM));
     }
 
     @Override
     public PushReaction getPistonPushReaction(BlockState blockState) {return PushReaction.BLOCK;}
-
     @Override
-    public VoxelShape getCollisionShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext context) {return COLLISION_SHAPE;}
+    public VoxelShape getCollisionShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext context) {return collisionShape;}
 
     @Override
     public ItemStack getCloneItemStack(BlockState blockState, HitResult target, BlockGetter level, BlockPos blockPos, Player player) {
@@ -110,25 +184,25 @@ public class AuraShrineBaseBlock extends Block {
     }
     @Override
     public VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext context) {
-        return blockState.getValue(HALF) == Half.TOP ? TOP_SHAPE : BOTTOM_SHAPE;
+        return blockState.getValue(HALF) == Half.TOP ? topShape : bottomShape;
     }
 
     @Override
     public void onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState1, boolean b) {
         blockPos = blockPos.above(blockState.getValue(HALF) == Half.TOP ? 1 : 2);
-        if (level.getBlockState(blockPos).is(PSBlocks.AURA_SHRINE.get())) {
+        if (level.getBlockState(blockPos).is(shrineBlock)) {
             level.destroyBlock(blockPos.below(2), true);
             level.removeBlock(blockPos.below(1), true);
             level.removeBlock(blockPos, true);
         }
     }
+    @SuppressWarnings("all")
     @Override
     public boolean onDestroyedByPlayer(BlockState blockState, Level level, BlockPos blockPos, Player player, boolean willHarvest, FluidState fluid) {
         BlockPos shrinePos = blockPos.above(blockState.getValue(HALF) == Half.BOTTOM ? 2 : 1);
         if (level.getBlockEntity(shrinePos) != null && !level.isClientSide) {
             if (OBTAINABLE && !player.isCreative()) {
                 ItemStack drop = new ItemStack(this);
-                //Todo: eradicate saveToItem
                 level.getBlockEntity(shrinePos).saveToItem(drop);
                 popResource(level, blockPos, drop);
             }
@@ -154,17 +228,18 @@ public class AuraShrineBaseBlock extends Block {
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
         blockPos = blockPos.above(blockState.getValue(HALF) == Half.TOP ? 1 : 2);
         return level.getBlockState(blockPos).getBlock().use(level.getBlockState(blockPos), level, blockPos, player, interactionHand, blockHitResult);
-
     }
 
     @Override
-    public boolean isPathfindable(BlockState blockState, BlockGetter level, BlockPos blockPos, PathComputationType pathType) {return false;}
+    public boolean isPathfindable(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, PathComputationType pathComputationType) {
+        return false;
+    }
 
     @Override
     public void onPlace(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState1, boolean b) {
         level.setBlock(blockPos.above(), blockState.getValue(HALF) == Half.BOTTOM
                 ? this.defaultBlockState().setValue(HALF, Half.TOP)
-                : PSBlocks.AURA_SHRINE.get().defaultBlockState(), 11);
+                : shrineBlock.defaultBlockState(), 11);
     }
 
     @Override
