@@ -150,6 +150,7 @@ public class ShrineBaseBlock extends Block {
             );
 
     public static final VoxelShape SIMPLE_COLLISION_SHAPE = Block.box(2, 0, 2, 14, 16, 14);
+    //Aura collision shape works for AoE shrines too
     public static final VoxelShape AURA_COLLISION_SHAPE = Block.box(3, 0, 3, 13, 16, 13);
 
     public static final EnumProperty<Half> HALF = BlockStateProperties.HALF;
