@@ -16,6 +16,6 @@ public class PSProcessors {
             PROCESSOR_TYPES.register("stain_retain_processor",
                     () -> () -> StateRetainProcessor.CODEC);
     public static final RegistryObject<StructureProcessorType<LootProcessor>> LOOT_PROCESSOR =
-            PROCESSOR_TYPES.register("stain_retain_processor",
+            PROCESSOR_TYPES.register("loot_processor",
                     () -> () -> LootProcessor.CODEC);
 }

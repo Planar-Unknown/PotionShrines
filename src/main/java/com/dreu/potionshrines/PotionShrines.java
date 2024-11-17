@@ -39,6 +39,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 
 import java.io.File;
@@ -242,5 +243,26 @@ public class PotionShrines {
     public static BlockState df(BlockState block){return block.getBlock().defaultBlockState();}
     public static StructureTemplate.StructureBlockInfo newInfo(BlockPos pos, BlockState state, CompoundTag tag){
         return new StructureTemplate.StructureBlockInfo(pos, state, tag);
+    }
+    public static CompoundTag withString(String key, String value){
+        CompoundTag a = new CompoundTag();
+        a.putString(key, value);
+        return a;
+    }
+    public static CompoundTag withStrings(Pair<String, String>... keysAndValues){
+        CompoundTag a = new CompoundTag();
+        for (Pair<String, String> pair : keysAndValues) {a.putString(pair.getLeft(), pair.getRight());}
+        return a;
+    }
+    public static CompoundTag withTag(String key, CompoundTag value){
+        CompoundTag a = new CompoundTag();
+        a.put(key, value);
+        return a;
+    }
+    public static boolean containsAny(String string, Collection<String> targets){
+        for (String target : targets){
+            if (string.contains(target)) return true;
+        }
+        return false;
     }
 }
