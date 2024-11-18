@@ -1,11 +1,11 @@
 package com.dreu.potionshrines.registry;
 
 import com.dreu.potionshrines.levelgen.processors.LootProcessor;
-import com.dreu.potionshrines.levelgen.processors.StateRetainProcessor;
+import com.dreu.potionshrines.levelgen.processors.RetainStatesProcessor;
+import com.dreu.potionshrines.levelgen.processors.rules.StateRetainRule;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.*;
 import net.minecraftforge.registries.DeferredRegister;
@@ -38,12 +38,13 @@ public class PSProcLists {
                     simpleRule(new RandomBlockMatchTest(STONE_BRICKS, 0.2F), Always, CRACKED_STONE_BRICKS.defaultBlockState()),
                     simpleRule(new RandomBlockMatchTest(STONE_BRICKS, 0.2F), Always, MOSSY_STONE_BRICKS.defaultBlockState()),
                     simpleRule(new RandomBlockMatchTest(STONE_BRICK_WALL, 0.2F), Always, MOSSY_STONE_BRICK_WALL.defaultBlockState()))),
-                new StateRetainProcessor(STONE_BRICK_STAIRS, MOSSY_STONE_BRICK_STAIRS, 0.2F),
-                new StateRetainProcessor(STONE_BRICK_STAIRS, STONE_STAIRS, 0.05F),
-                new StateRetainProcessor(STONE_BRICK_STAIRS, MOSSY_COBBLESTONE_STAIRS, 0.05F),
-                new StateRetainProcessor(STONE_BRICK_SLAB, MOSSY_STONE_BRICK_SLAB, 0.2F),
-                new StateRetainProcessor(STONE_BRICK_SLAB, STONE_SLAB, 0.2F),
-                new StateRetainProcessor(STONE_BRICK_SLAB, MOSSY_COBBLESTONE_SLAB, 0.2F),
+                new RetainStatesProcessor(
+                        new StateRetainRule(STONE_BRICK_STAIRS, MOSSY_STONE_BRICK_STAIRS, 0.2F),
+                        new StateRetainRule(STONE_BRICK_STAIRS, STONE_STAIRS, 0.05F),
+                        new StateRetainRule(STONE_BRICK_STAIRS, MOSSY_COBBLESTONE_STAIRS, 0.05F),
+                        new StateRetainRule(STONE_BRICK_SLAB, MOSSY_STONE_BRICK_SLAB, 0.2F),
+                        new StateRetainRule(STONE_BRICK_SLAB, STONE_SLAB, 0.2F),
+                        new StateRetainRule(STONE_BRICK_SLAB, MOSSY_COBBLESTONE_SLAB, 0.2F)),
                 new LootProcessor(lootProcessorsMap())
         ))).getHolder().get();
 

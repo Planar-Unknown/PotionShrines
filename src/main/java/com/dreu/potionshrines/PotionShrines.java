@@ -62,7 +62,7 @@ import static com.dreu.potionshrines.registry.PSFeatures.Placed.PLACED_FEATURES;
 import static com.dreu.potionshrines.registry.PSItems.ITEMS;
 import static com.dreu.potionshrines.registry.PSMenuTypes.MENUS;
 import static com.dreu.potionshrines.registry.PSProcLists.PROC_LISTS;
-import static com.dreu.potionshrines.registry.PSProcessors.PROCESSOR_TYPES;
+import static com.dreu.potionshrines.registry.PSProcTypes.PROCESSOR_TYPES;
 
 @SuppressWarnings("SpellCheckingInspection")
 @Mod(PotionShrines.MODID)

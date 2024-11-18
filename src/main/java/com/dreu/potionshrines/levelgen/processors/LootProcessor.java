@@ -17,7 +17,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 import static com.dreu.potionshrines.PotionShrines.*;
-import static com.dreu.potionshrines.registry.PSProcessors.LOOT_PROCESSOR;
+import static com.dreu.potionshrines.registry.PSProcTypes.LOOT_PROCESSOR;
 import static net.minecraft.world.level.block.ChestBlock.FACING;
 
 public class LootProcessor extends StructureProcessor {
@@ -56,7 +56,7 @@ public class LootProcessor extends StructureProcessor {
     @Override
     @SuppressWarnings("unchecked")
     public StructureTemplate.StructureBlockInfo process(LevelReader levelReader, BlockPos blockPos, BlockPos origin, StructureTemplate.StructureBlockInfo worldBlock, StructureTemplate.StructureBlockInfo structureBlock, StructurePlaceSettings settings, @Nullable StructureTemplate template) {
-        if (!structureBlock.state.is(Blocks.CHEST) || !structureBlock.nbt.contains("LootTable") || !containsAny(structureBlock.nbt.getString("LootTable"), processors.keySet())) {return structureBlock;}
+        if (!structureBlock.state.is(Blocks.CHEST) || structureBlock.nbt == null || !structureBlock.nbt.contains("LootTable") || !containsAny(structureBlock.nbt.getString("LootTable"), processors.keySet())) {return structureBlock;}
 
         float[] weights = processors.get(structureBlock.nbt.getString("LootTable"));
 
@@ -65,9 +65,7 @@ public class LootProcessor extends StructureProcessor {
         for (int i = 0; i < weights.length; i++) {
             cumulativeWeight += weights[i];
             if (rarity < cumulativeWeight) {
-                System.out.println("Replacing: " + structureBlock + " ___ at step [" + i + "]");
                 if (lootOptions[i] == null){
-                    System.out.println("With: Air");
                     return newInfo(structureBlock.pos, df(Blocks.AIR), null);
                 }
                 System.out.println("With: ");

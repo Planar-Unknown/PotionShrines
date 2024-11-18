@@ -39,7 +39,7 @@ public class Structures {
             new ResourceLocation(MODID, "ug_stone_brick_dungeon")),
             new JigsawStructure(new Structure.StructureSettings(
                     biomes(HAS_UG_STONE_BRICK_DUNGEON), Map.of(),
-                    GenerationStep.Decoration.UNDERGROUND_STRUCTURES,
+                    GenerationStep.Decoration.TOP_LAYER_MODIFICATION,
                     TerrainAdjustment.NONE),
                     TemplatePools.UG_STONE_BRICK_START,
                     /*Jigsaw Levels*/ 7,
