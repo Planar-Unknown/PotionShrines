@@ -21,10 +21,12 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Objects;
 
+import static com.dreu.potionshrines.PotionShrines.MODID;
 import static com.dreu.potionshrines.blocks.shrine.simple.SimpleShrineBlock.LIGHT_LEVEL;
 import static com.dreu.potionshrines.config.General.SHRINES_REPLENISH;
 import static com.dreu.potionshrines.config.SimpleShrine.getRandomShrine;
@@ -84,7 +86,7 @@ public class SimpleShrineBlockEntity extends BlockEntity implements MenuProvider
         super.saveAdditional(nbt);
     }
     @Override
-    public void load(CompoundTag nbt){
+    public void load(@NotNull CompoundTag nbt){
         super.load(nbt);
         amplifier = nbt.getInt("amplifier");
         remainingCooldown = nbt.getInt("remaining_cooldown");
@@ -95,7 +97,6 @@ public class SimpleShrineBlockEntity extends BlockEntity implements MenuProvider
         icon = nbt.getString("icon");
     }
 
-    @Nullable
     @Override
     public Packet<ClientGamePacketListener> getUpdatePacket() {
         CompoundTag nbt = new CompoundTag();
@@ -103,15 +104,13 @@ public class SimpleShrineBlockEntity extends BlockEntity implements MenuProvider
         return ClientboundBlockEntityDataPacket.create(this);
     }
     @Override
-    public CompoundTag getUpdateTag() {
+    public @NotNull CompoundTag getUpdateTag() {
         CompoundTag nbt = new CompoundTag();
         this.saveAdditional(nbt);
         return nbt;
     }
-    @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        this.load(pkt.getTag());
-    }
+    @Override @SuppressWarnings("all")
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {this.load(pkt.getTag());}
 
     public String getEffect(){return effect;}
     public int getDuration(){return duration;}
@@ -141,12 +140,11 @@ public class SimpleShrineBlockEntity extends BlockEntity implements MenuProvider
     }
 
     @Override
-    public Component getDisplayName() {
-        return Component.translatable("gui.potion_shrines.shrine_options");
+    public @NotNull Component getDisplayName() {
+        return Component.translatable("gui." + MODID + ".shrine_options");
     }
 
-    @Nullable
-    @Override
+    @Override @ParametersAreNonnullByDefault
     public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
         return new SimpleShrineMenu(id, this);
     }

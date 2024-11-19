@@ -23,11 +23,14 @@ import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.ParametersAreNonnullByDefault;
 
 import static com.dreu.potionshrines.config.General.OBTAINABLE;
 import static com.dreu.potionshrines.config.General.SHRINE_INDESTRUCTIBLE;
 
+@SuppressWarnings("deprecation")
 public class DecrepitShrineBlock extends Block {
     public static final EnumProperty<Half> HALF = BlockStateProperties.HALF;
     public static final BooleanProperty PLAYER_PLACED = BooleanProperty.create("player_placed");
@@ -44,23 +47,23 @@ public class DecrepitShrineBlock extends Block {
         this.topShape = topShape;
     }
 
-    @Override
-    public VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext context) {
+    @Override @ParametersAreNonnullByDefault
+    public @NotNull VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext context) {
         return blockState.getValue(HALF) == Half.BOTTOM ? bottomShape : topShape;
     }
 
     @Override
-    public PushReaction getPistonPushReaction(BlockState blockState) {
+    public @NotNull PushReaction getPistonPushReaction(@NotNull BlockState blockState) {
         return PushReaction.BLOCK;
     }
 
     @Override
-    public RenderShape getRenderShape(BlockState blockState) {
+    public @NotNull RenderShape getRenderShape(BlockState blockState) {
         return blockState.getValue(HALF) == Half.TOP ? RenderShape.INVISIBLE : RenderShape.MODEL;
     }
 
     @Override
-    public void onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState1, boolean b) {
+    public void onRemove(BlockState blockState, Level level, BlockPos blockPos, @NotNull BlockState blockState1, boolean b) {
         level.removeBlock(blockPos.above(blockState.getValue(HALF) == Half.BOTTOM ? 1 : -1), true);
     }
     @Override
@@ -74,7 +77,7 @@ public class DecrepitShrineBlock extends Block {
         return super.onDestroyedByPlayer(blockState, level, blockPos, player, !player.isCreative(), fluid);
     }
 
-    @Override
+    @Override @ParametersAreNonnullByDefault
     public float getDestroyProgress(BlockState blockState, Player player, BlockGetter blockGetter, BlockPos blockPos) {
         return blockState.getValue(PLAYER_PLACED) || !SHRINE_INDESTRUCTIBLE ? super.getDestroyProgress(blockState, player, blockGetter, blockPos) : 0f;
     }
@@ -88,12 +91,12 @@ public class DecrepitShrineBlock extends Block {
     public float getExplosionResistance(BlockState blockState, BlockGetter level, BlockPos pos, Explosion explosion) {
         return General.SHRINE_INDESTRUCTIBLE && !blockState.getValue(PLAYER_PLACED) ? 3600000 : 1200;
     }
-    @Override
+    @Override @ParametersAreNonnullByDefault
     public boolean isPathfindable(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, PathComputationType pathComputationType) {
         return false;
     }
 
-    @Override
+    @Override @ParametersAreNonnullByDefault
     public boolean canSurvive(BlockState blockState, LevelReader levelReader, BlockPos blockPos) {
         if (blockState.getValue(HALF) == Half.BOTTOM) {
             return (levelReader.getBlockState(blockPos.above()).equals(blockState.setValue(HALF, Half.TOP)) || levelReader.getBlockState(blockPos.above()).getMaterial().isReplaceable());
@@ -101,13 +104,12 @@ public class DecrepitShrineBlock extends Block {
         return true;
     }
 
-    @Nullable
     @Override
-    public BlockState getStateForPlacement(BlockPlaceContext context) {
+    public BlockState getStateForPlacement(@NotNull BlockPlaceContext context) {
         return super.getStateForPlacement(context);
     }
 
-    @Override
+    @Override @ParametersAreNonnullByDefault
     public void onPlace(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState1, boolean b) {
         if (blockState.getValue(HALF) == Half.BOTTOM){
             level.setBlock(blockPos.above(), this.defaultBlockState().setValue(HALF, Half.TOP), 11);

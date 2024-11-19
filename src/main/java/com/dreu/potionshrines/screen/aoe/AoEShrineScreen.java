@@ -16,6 +16,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
@@ -43,10 +44,10 @@ public class AoEShrineScreen extends ShrineScreen<AoEShrineMenu> implements Icon
 
     @Override
     protected void initialize() {
-        saveButton = new Button(leftPos + 222, topPos + 166, NUMBER_BOX_WIDTH, 20, Component.translatable("gui.potion_shrines.save"), this::onSaveClick);
+        saveButton = new Button(leftPos + 222, topPos + 166, NUMBER_BOX_WIDTH, 20, Component.translatable("gui." + MODID + ".save"), this::onSaveClick);
         resetCooldownButton = new Button(leftPos + 81, topPos + 65, NUMBER_BOX_WIDTH, 20, Component.literal(String.valueOf(menu.shrineEntity.getRemainingCooldown() / 20)), this::onCooldownClick);
-        blockNbtButton = new Button(leftPos + 82, topPos + 166, NUMBER_BOX_WIDTH, 20, Component.translatable("gui.potion_shrines.blockNbt"), this::onCopyBlockNbtClick);
-        itemNbtButton = new Button(leftPos + 148, topPos + 166, NUMBER_BOX_WIDTH, 20, Component.translatable("gui.potion_shrines.itemNbt"), this::onCopyItemNbtClick);
+        blockNbtButton = new Button(leftPos + 82, topPos + 166, NUMBER_BOX_WIDTH, 20, Component.translatable("gui." + MODID + ".blockNbt"), this::onCopyBlockNbtClick);
+        itemNbtButton = new Button(leftPos + 148, topPos + 166, NUMBER_BOX_WIDTH, 20, Component.translatable("gui." + MODID + ".itemNbt"), this::onCopyItemNbtClick);
 
         effectBox = new EditBox(font, leftPos + 8, topPos + 32, EFFECT_BOX_WIDTH, EDIT_BOX_HEIGHT, Component.literal(""));
         effectBox.setMaxLength(100);
@@ -89,11 +90,11 @@ public class AoEShrineScreen extends ShrineScreen<AoEShrineMenu> implements Icon
         radiusBox.setValue(String.valueOf(menu.shrineEntity.getRadius()));
 
         effectPlayersButton = new Button(leftPos + 8, topPos + 99, NUMBER_BOX_WIDTH, 20,
-                Component.translatable("potion_shrines." + menu.shrineEntity.canEffectPlayers()), this::onBooleanClick);
+                Component.translatable(MODID + "." + menu.shrineEntity.canEffectPlayers()), this::onBooleanClick);
         effectMonstersButton = new Button(leftPos + 8, topPos + 132, NUMBER_BOX_WIDTH, 20,
-                Component.translatable("potion_shrines." + menu.shrineEntity.canEffectMonsters()), this::onBooleanClick);
+                Component.translatable(MODID + "." + menu.shrineEntity.canEffectMonsters()), this::onBooleanClick);
         replenishButton = new Button(leftPos + 8, topPos + 166, NUMBER_BOX_WIDTH, 20,
-                Component.translatable("potion_shrines." + menu.shrineEntity.canReplenish()), this::onBooleanClick);
+                Component.translatable(MODID + "." + menu.shrineEntity.canReplenish()), this::onBooleanClick);
         suggestions = new ArrayList<>();
         icon = menu.shrineEntity.getIcon();
     }
@@ -142,9 +143,9 @@ public class AoEShrineScreen extends ShrineScreen<AoEShrineMenu> implements Icon
         addRenderableWidget(itemNbtButton);
 
         addRenderableWidget(new Button(leftPos + 222, topPos + 99, NUMBER_BOX_WIDTH, 20,
-                Component.translatable("gui.potion_shrines.reset"), this::onResetClick));
+                Component.translatable("gui." + MODID + ".reset"), this::onResetClick));
         addRenderableWidget(new Button(leftPos + 222, topPos + 132, NUMBER_BOX_WIDTH, 20,
-                Component.translatable("gui.potion_shrines.cancel"), this::onCancelClick));
+                Component.translatable("gui." + MODID + ".cancel"), this::onCancelClick));
     }
 
     private void onCopyBlockNbtClick(Button button) {
@@ -160,7 +161,7 @@ public class AoEShrineScreen extends ShrineScreen<AoEShrineMenu> implements Icon
         tag.putBoolean("replenish", parseBoolean(replenishButton.getMessage().getString()));
         tag.putString("icon", icon);
 
-        this.minecraft.keyboardHandler.setClipboard(tag.getAsString());
+         Minecraft.getInstance().keyboardHandler.setClipboard(tag.getAsString());
     }
 
     private void onCopyItemNbtClick(Button button){
@@ -178,13 +179,14 @@ public class AoEShrineScreen extends ShrineScreen<AoEShrineMenu> implements Icon
         CompoundTag compoundTag = new CompoundTag();
         compoundTag.put("BlockEntityTag", tag);
 
-        this.minecraft.keyboardHandler.setClipboard(compoundTag.getAsString());
+        Minecraft.getInstance().keyboardHandler.setClipboard(compoundTag.getAsString());
     }
     @Override
     protected void onIconClick() {
+        assert Minecraft.getInstance().player != null;
         Minecraft.getInstance().setScreen(new IconSelectionScreen(
                 new IconSelectionMenu(this.menu.containerId),
-                this.minecraft.player.getInventory(),
+                Minecraft.getInstance().player.getInventory(),
                 Component.literal("Icon Selection")).withReturnScreen(this));
     }
     protected void onResetClick(Button button) {
@@ -194,9 +196,9 @@ public class AoEShrineScreen extends ShrineScreen<AoEShrineMenu> implements Icon
         maxCooldownBox.setValue(String.valueOf(menu.shrineEntity.getMaxCooldown() / 20));
         radiusBox.setValue(String.valueOf(menu.shrineEntity.getRadius()));
         icon = menu.shrineEntity.getIcon();
-        effectPlayersButton.setMessage(Component.translatable("potion_shrines." + menu.shrineEntity.canEffectPlayers()));
-        effectMonstersButton.setMessage(Component.translatable("potion_shrines." + menu.shrineEntity.canEffectMonsters()));
-        replenishButton.setMessage(Component.translatable("potion_shrines." + menu.shrineEntity.canReplenish()));
+        effectPlayersButton.setMessage(Component.translatable(MODID + "." + menu.shrineEntity.canEffectPlayers()));
+        effectMonstersButton.setMessage(Component.translatable(MODID + "." + menu.shrineEntity.canEffectMonsters()));
+        replenishButton.setMessage(Component.translatable(MODID + "." + menu.shrineEntity.canReplenish()));
         suggestions.clear();
     }
     private void onSaveClick(Button button) {
@@ -247,7 +249,7 @@ public class AoEShrineScreen extends ShrineScreen<AoEShrineMenu> implements Icon
         updateNbtValidity();
     }
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(@NotNull PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
 
         RenderSystem.enableDepthTest();
         super.render(poseStack, mouseX, mouseY, partialTicks);
@@ -266,18 +268,18 @@ public class AoEShrineScreen extends ShrineScreen<AoEShrineMenu> implements Icon
         RenderSystem.disableDepthTest();
     }
     @Override
-    protected void renderLabels(PoseStack poseStack, int mouseX, int mouseY) {
+    protected void renderLabels(@NotNull PoseStack poseStack, int mouseX, int mouseY) {
         font.draw(poseStack, title, 47 - font.width(title.getVisualOrderText()) * 0.5f, titleLabelY, 4210752);
-        font.draw(poseStack, Component.translatable("gui.potion_shrines.effect").append(Component.translatable("gui.potion_shrines.tab_hint")), titleLabelX, 22, 4210752);
-        font.draw(poseStack, Component.translatable("gui.potion_shrines.amplifier"), 243, 22, 4210752);
-        font.draw(poseStack, Component.translatable("gui.potion_shrines.duration"), titleLabelX, 56, 4210752);
-        font.draw(poseStack, Component.translatable("tooltip.potion_shrines.cooldown"), 82, 56, 4210752);
-        font.draw(poseStack, Component.translatable("tooltip.potion_shrines.max"), 148, 56, 4210752); //
-        font.draw(poseStack, Component.translatable("tooltip.potion_shrines.radius"), 222, 56, 4210752);
-        font.draw(poseStack, Component.translatable("tooltip.potion_shrines.players"), 9, 90, 4210752);
-        font.draw(poseStack, Component.translatable("tooltip.potion_shrines.monsters"), 9, 123, 4210752);
-        font.draw(poseStack, Component.translatable("tooltip.potion_shrines.replenish"), 9, 157, 4210752);
-        font.draw(poseStack, Component.translatable("tooltip.potion_shrines.icon"), 120, 90, 4210752);
+        font.draw(poseStack, Component.translatable("gui." + MODID + ".effect").append(Component.translatable("gui." + MODID + ".tab_hint")), titleLabelX, 22, 4210752);
+        font.draw(poseStack, Component.translatable("gui." + MODID + ".amplifier"), 243, 22, 4210752);
+        font.draw(poseStack, Component.translatable("gui." + MODID + ".duration"), titleLabelX, 56, 4210752);
+        font.draw(poseStack, Component.translatable("tooltip." + MODID + ".cooldown"), 82, 56, 4210752);
+        font.draw(poseStack, Component.translatable("tooltip." + MODID + ".max"), 148, 56, 4210752); //
+        font.draw(poseStack, Component.translatable("tooltip." + MODID + ".radius"), 222, 56, 4210752);
+        font.draw(poseStack, Component.translatable("tooltip." + MODID + ".players"), 9, 90, 4210752);
+        font.draw(poseStack, Component.translatable("tooltip." + MODID + ".monsters"), 9, 123, 4210752);
+        font.draw(poseStack, Component.translatable("tooltip." + MODID + ".replenish"), 9, 157, 4210752);
+        font.draw(poseStack, Component.translatable("tooltip." + MODID + ".icon"), 120, 90, 4210752);
     }
     @Override
     protected boolean isMouseOverIcon(int mouseX, int mouseY) {

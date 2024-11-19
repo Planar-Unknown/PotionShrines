@@ -23,7 +23,7 @@ import java.util.Map;
 
 import static com.dreu.potionshrines.PotionShrines.MODID;
 import static com.dreu.potionshrines.registry.PSTags.Biomes.HAS_UG_STONE_BRICK_DUNGEON;
-
+@SuppressWarnings({"deprecation", "SameParameterValue"})
 public class Structures {
     public static void registerSets() {
         BuiltinRegistries.register(BuiltinRegistries.STRUCTURE_SETS, ResourceKey.create(Registry.STRUCTURE_SET_REGISTRY,
@@ -49,9 +49,7 @@ public class Structures {
 
 
     //_______________HELPERS_____________________
-    private static HeightProvider between(int min, int max) {
-        return UniformHeight.of(VerticalAnchor.absolute(min), VerticalAnchor.absolute(max));
-    }
+    private static HeightProvider between(int min, int max) {return UniformHeight.of(VerticalAnchor.absolute(min), VerticalAnchor.absolute(max));}
 
     private static HolderSet<Biome> biomes(TagKey<Biome> key) {
         return BuiltinRegistries.BIOME.getOrCreateTag(key);

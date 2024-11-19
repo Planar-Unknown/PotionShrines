@@ -15,6 +15,7 @@ import static com.dreu.potionshrines.blocks.shrine.ShrineBaseBlock.HALF;
 import static net.minecraft.world.level.block.StairBlock.FACING;
 import static net.minecraft.world.level.block.StairBlock.SHAPE;
 
+@SuppressWarnings("DataFlowIssue")
 public class AoEShrineSurfaceAltarFeaturePlacer extends Feature<NoneFeatureConfiguration> {
     public AoEShrineSurfaceAltarFeaturePlacer() {super(NoneFeatureConfiguration.CODEC);}
     @Override

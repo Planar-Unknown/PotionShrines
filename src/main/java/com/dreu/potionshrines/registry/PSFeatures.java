@@ -57,6 +57,7 @@ public class PSFeatures {
 		}
     }
 
+	@SuppressWarnings("unused")
     public static final class Placed {
 		public static final DeferredRegister<PlacedFeature> PLACED_FEATURES = DeferredRegister.create(Registry.PLACED_FEATURE_REGISTRY, PotionShrines.MODID);
 

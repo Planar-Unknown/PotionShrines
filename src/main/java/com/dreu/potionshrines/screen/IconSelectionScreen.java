@@ -20,8 +20,9 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +30,7 @@ import static com.dreu.potionshrines.PotionShrines.*;
 import static com.dreu.potionshrines.screen.aoe.AoEShrineScreen.NUMBER_BOX_WIDTH;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
 
+@SuppressWarnings("DataFlowIssue")
 public class IconSelectionScreen extends AbstractContainerScreen<IconSelectionMenu> implements MenuProvider {
     private IconScreen<?> returnScreen;
     private static final ResourceLocation BACKGROUND_TEXTURE = new ResourceLocation(MODID, "textures/gui/shrine_icon_screen.png");
@@ -60,11 +62,11 @@ public class IconSelectionScreen extends AbstractContainerScreen<IconSelectionMe
             iconBox.y = topPos + 20;
         }
         addRenderableWidget(new Button(leftPos + 8, topPos + 86, NUMBER_BOX_WIDTH, 20,
-                Component.translatable("gui.potion_shrines.reset"), this::onResetClick));
+                Component.translatable("gui." + MODID + ".reset"), this::onResetClick));
         addRenderableWidget(new Button(leftPos + 93, topPos + 86, NUMBER_BOX_WIDTH, 20,
-                Component.translatable("gui.potion_shrines.cancel"), this::onCancelClick));
+                Component.translatable("gui." + MODID + ".cancel"), this::onCancelClick));
         addRenderableWidget(new Button(leftPos + imageWidth - 74, topPos + 86, NUMBER_BOX_WIDTH, 20,
-                Component.translatable("gui.potion_shrines.done"), this::onDoneClick));
+                Component.translatable("gui." + MODID + ".done"), this::onDoneClick));
         addRenderableWidget(iconBox);
     }
 
@@ -101,7 +103,7 @@ public class IconSelectionScreen extends AbstractContainerScreen<IconSelectionMe
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(@NotNull PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
         super.render(poseStack, mouseX, mouseY, partialTicks);
         renderSuggestedIcons(poseStack, mouseX, mouseY, partialTicks);
     }
@@ -143,7 +145,7 @@ public class IconSelectionScreen extends AbstractContainerScreen<IconSelectionMe
     }
 
     @Override
-    protected void renderBg(PoseStack poseStack, float partialTick, int mouseX, int mouseY) {
+    protected void renderBg(@NotNull PoseStack poseStack, float partialTick, int mouseX, int mouseY) {
         renderBackground(poseStack);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -153,13 +155,13 @@ public class IconSelectionScreen extends AbstractContainerScreen<IconSelectionMe
     }
 
     @Override
-    protected void renderLabels(PoseStack poseStack, int mouseX, int mouseY) {
+    protected void renderLabels(@NotNull PoseStack poseStack, int mouseX, int mouseY) {
         this.font.draw(poseStack, this.title, (float)this.titleLabelX, (float)this.titleLabelY, 4210752);
     }
 
     @Override
-    public Component getDisplayName() {
-        return Component.literal("testing shit");
+    public @NotNull Component getDisplayName() {
+        return Component.literal("testing shit"); //Todo, figure this out? what were we testing for?
     }
 
     @Override
@@ -208,8 +210,7 @@ public class IconSelectionScreen extends AbstractContainerScreen<IconSelectionMe
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
-    @Nullable
-    @Override
+    @Override @ParametersAreNonnullByDefault
     public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
         return new IconSelectionMenu(id);
     }

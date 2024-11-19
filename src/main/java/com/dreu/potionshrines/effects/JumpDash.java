@@ -9,6 +9,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 import static com.dreu.potionshrines.PotionShrines.EFFECTS;
 import static com.dreu.potionshrines.PotionShrines.MODID;
+@SuppressWarnings({"unused", "DataFlowIssue"})
 @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class JumpDash extends MobEffect {
     public static final RegistryObject<MobEffect> JUMP_DASH = EFFECTS.register("jump_dash", JumpDash::new);

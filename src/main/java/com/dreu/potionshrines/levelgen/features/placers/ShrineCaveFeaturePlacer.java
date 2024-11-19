@@ -11,6 +11,7 @@ import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConf
 
 import static com.dreu.potionshrines.blocks.shrine.ShrineBaseBlock.HALF;
 
+@SuppressWarnings("DataFlowIssue")
 public class ShrineCaveFeaturePlacer extends Feature<NoneFeatureConfiguration> {
     private final Block base;
     private final Block shrine;

@@ -2,9 +2,9 @@ package com.dreu.potionshrines.config;
 
 import com.electronwill.nightconfig.core.Config;
 import com.electronwill.nightconfig.toml.TomlParser;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
+import java.util.Map;
 
 import static com.dreu.potionshrines.PotionShrines.rand;
 public class AoEShrine extends PSConfig {
@@ -349,10 +349,10 @@ Weight = 5
 Icon = "levitation"
 """;
 
-    private static final Pair<Config, String> CONFIG = getConfigOrDefault("aoe_shrine", defaultConfig);
+    private static final Map.Entry<Config, String> CONFIG = getConfigOrDefault("aoe_shrine", defaultConfig);
     @SuppressWarnings("unused")
     private static final Config CONFIG_DEFAULT = new TomlParser().parse(defaultConfig);
-    public static final List<Config> AOE_SHRINES = CONFIG.getLeft().get("Shrine");
+    public static final List<Config> AOE_SHRINES = CONFIG.getKey().get("Shrine");
     public static double TOTAL_WEIGHT_AOE = 0;
 
     public static Config getRandomAoEShrine() {

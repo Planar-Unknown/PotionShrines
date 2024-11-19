@@ -7,10 +7,13 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProc
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 
+import static com.dreu.potionshrines.PotionShrines.MODID;
+
+@SuppressWarnings("SpellCheckingInspection")
 public class PSProcTypes {
 
     public static final DeferredRegister<StructureProcessorType<?>> PROCESSOR_TYPES =
-            DeferredRegister.create(Registry.STRUCTURE_PROCESSOR_REGISTRY, "potion_shrines");
+            DeferredRegister.create(Registry.STRUCTURE_PROCESSOR_REGISTRY, MODID);
 
     public static final RegistryObject<StructureProcessorType<RetainStatesProcessor>> RETAIN_STATES_PROCESSOR =
             PROCESSOR_TYPES.register("stain_retain_processor",

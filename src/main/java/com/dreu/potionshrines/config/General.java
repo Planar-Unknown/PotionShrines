@@ -3,7 +3,8 @@ package com.dreu.potionshrines.config;
 import com.electronwill.nightconfig.core.Config;
 import com.electronwill.nightconfig.toml.TomlParser;
 import net.minecraft.util.Mth;
-import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.Map;
 
 public class General extends PSConfig {
     static final String defaultConfig = """
@@ -23,7 +24,7 @@ public class General extends PSConfig {
             AuraShrine = 400
             """;
 
-    private static final Pair<Config, String> CONFIG = getConfigOrDefault("general", defaultConfig);
+    private static final Map.Entry<Config, String> CONFIG = getConfigOrDefault("general",defaultConfig);
     private static final Config CONFIG_DEFAULT = new TomlParser().parse(defaultConfig);
     public static final Boolean SHRINES_REPLENISH = getBooleanOrDefault("Replenish", CONFIG, CONFIG_DEFAULT);
     public static final int SIMPLE_SHRINE_RARITY = Mth.clamp(getIntOrDefault("Rarity.SimpleShrine", CONFIG, CONFIG_DEFAULT), 1, 10000);

@@ -9,6 +9,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
+import static com.dreu.potionshrines.PotionShrines.MODID;
+
 public class ExampleResourcePack {
     public static void generate() {
         File baseDir = new File("resourcepacks/Potion Shrine Icons");
@@ -26,25 +28,23 @@ public class ExampleResourcePack {
 
                 // Write README.txt
                 Files.writeString(Paths.get(baseDir.getPath(), "README.txt"),
-                        """
-                                This pack is structured as follows:
-                                [Potion Shrine Icons]
-                                   -pack.mcmeta
-                                   -[assets]
-                                      -[potion_shrines]
-                                         -[models]
-                                            -[icon]
-                                               -default.json
-                                         -[textures]
-                                            -[icon]
-                                               -default.png
-                                               ~add your icon png here~
+                 "This pack is structured as follows:\n" +
+                      " [Potion Shrine Icons]\n" +
+                      "    -pack.mcmeta\n" +
+                      "    -[assets]\n" +
+                      "       -[" + MODID + "]\n" +
+                      "          -[models]\n" +
+                      "             -[icon]\n" +
+                      "                -default.json\n" +
+                      "          -[textures]\n" +
+                      "             -[icon]\n" +
+                      "                -default.png\n" +
+                      "                ~add your icon png here~\n" +
+                      "\n" +
+                      "In the \"textures/icon\" folder put the desired png for the custom icon (nothing more than 64x64 is recommended)\n" +
+                      "*In order for these to be usable the game MUST be restarted.", StandardOpenOption.CREATE);
 
-                                In the "textures/icon" folder put the desired png for the custom icon (nothing more than 64x64 is recommended)
-                                *In order for these to be usable the game MUST be restarted.
-                                """, StandardOpenOption.CREATE);
-
-                File textureDir = new File("resourcepacks/Potion Shrine Icons/assets/potion_shrines/textures/icon");
+                File textureDir = new File("resourcepacks/Potion Shrine Icons/assets/" + MODID + "/textures/icon");
                 if (textureDir.mkdirs()) {
                     BufferedImage image = new BufferedImage(18, 18, BufferedImage.TYPE_INT_ARGB);
                     Graphics2D g2d = image.createGraphics();

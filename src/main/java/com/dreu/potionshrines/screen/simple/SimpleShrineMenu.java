@@ -9,6 +9,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import org.jetbrains.annotations.NotNull;
 
 public class SimpleShrineMenu extends AbstractContainerMenu implements ShrineMenu {
     public final SimpleShrineBlockEntity shrineEntity;
@@ -21,14 +22,12 @@ public class SimpleShrineMenu extends AbstractContainerMenu implements ShrineMen
     }
 
     @Override
-    public ItemStack quickMoveStack(Player player, int i) {
-        return null;
+    public @NotNull ItemStack quickMoveStack(@NotNull Player player, int i) {
+        return player.getInventory().getItem(i);
     }
 
     @Override
-    public boolean stillValid(Player player) {
-        return true;
-    }
+    public boolean stillValid(@NotNull Player player) {return true;}
 
     @Override
     public void resetCooldown() {

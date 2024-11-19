@@ -12,13 +12,16 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import static com.dreu.potionshrines.PotionShrines.BAKED_ICONS;
+import static com.dreu.potionshrines.PotionShrines.MODID;
 
+@SuppressWarnings("DataFlowIssue")
 public class SimpleShrineRenderer implements BlockEntityRenderer<SimpleShrineBlockEntity> {
     public SimpleShrineRenderer(){}
     @Override
-    public void render(SimpleShrineBlockEntity shrineEntity, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight, int combinedOverlay) {
+    public void render(SimpleShrineBlockEntity shrineEntity, float partialTicks, @NotNull PoseStack poseStack, @NotNull MultiBufferSource bufferSource, int combinedLight, int combinedOverlay) {
         float cooldown = shrineEntity.getRemainingCooldown();
         float uvY = shrineEntity.canReplenish() ? 1 - (float) shrineEntity.getRemainingCooldown() / shrineEntity.getMaxCooldown() : 0;
         if (cooldown == 0){
@@ -80,7 +83,7 @@ public class SimpleShrineRenderer implements BlockEntityRenderer<SimpleShrineBlo
         }
         RenderSystem.enableDepthTest();
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, new ResourceLocation("potion_shrines", "textures/block/simple_recharging.png"));
+        RenderSystem.setShaderTexture(0, new ResourceLocation(MODID, "textures/block/simple_recharging.png"));
         poseStack.pushPose();
 
         poseStack.translate(0.5, -1.375, 0.5);

@@ -14,7 +14,6 @@ import static com.dreu.potionshrines.PotionShrines.MODID;
 import static com.dreu.potionshrines.registry.PSProcLists.DUNGEON_STONE_BRICK;
 public class TemplatePools {
     public static final String SB = MODID + ":dungeons/stone_brick/";
-    public static final String LOOT = MODID + ":dungeons/loot/";
     public static final Holder<StructureTemplatePool> UG_STONE_BRICK_START = Pools.register(new StructureTemplatePool(
             new ResourceLocation(SB + "ug_start"),
             new ResourceLocation("empty"),

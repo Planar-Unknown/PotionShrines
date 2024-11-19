@@ -26,9 +26,12 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.ParametersAreNonnullByDefault;
 
 import static com.dreu.potionshrines.config.General.OBTAINABLE;
-
+@SuppressWarnings({"deprecation", "DataFlowIssue"})
 public class ShrineBaseBlock extends Block {
     public static final VoxelShape SIMPLE_BOTTOM_SHAPE =
             Shapes.join(
@@ -170,9 +173,9 @@ public class ShrineBaseBlock extends Block {
     }
 
     @Override
-    public PushReaction getPistonPushReaction(BlockState blockState) {return PushReaction.BLOCK;}
-    @Override
-    public VoxelShape getCollisionShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext context) {return collisionShape;}
+    public @NotNull PushReaction getPistonPushReaction(@NotNull BlockState blockState) {return PushReaction.BLOCK;}
+    @Override @ParametersAreNonnullByDefault
+    public @NotNull VoxelShape getCollisionShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext context) {return collisionShape;}
 
     @Override
     public ItemStack getCloneItemStack(BlockState blockState, HitResult target, BlockGetter level, BlockPos blockPos, Player player) {
@@ -180,15 +183,15 @@ public class ShrineBaseBlock extends Block {
     }
 
     @Override
-    public RenderShape getRenderShape(BlockState blockState) {
+    public @NotNull RenderShape getRenderShape(BlockState blockState) {
         return blockState.getValue(HALF) == Half.TOP ? RenderShape.INVISIBLE : RenderShape.MODEL;
     }
-    @Override
-    public VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext context) {
+    @Override @ParametersAreNonnullByDefault
+    public @NotNull VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext context) {
         return blockState.getValue(HALF) == Half.TOP ? topShape : bottomShape;
     }
 
-    @Override
+    @Override @ParametersAreNonnullByDefault
     public void onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState1, boolean b) {
         blockPos = blockPos.above(blockState.getValue(HALF) == Half.TOP ? 1 : 2);
         if (level.getBlockState(blockPos).is(shrineBlock)) {
@@ -197,7 +200,6 @@ public class ShrineBaseBlock extends Block {
             level.removeBlock(blockPos, true);
         }
     }
-    @SuppressWarnings("all")
     @Override
     public boolean onDestroyedByPlayer(BlockState blockState, Level level, BlockPos blockPos, Player player, boolean willHarvest, FluidState fluid) {
         BlockPos shrinePos = blockPos.above(blockState.getValue(HALF) == Half.BOTTOM ? 2 : 1);
@@ -225,19 +227,19 @@ public class ShrineBaseBlock extends Block {
         return General.SHRINE_INDESTRUCTIBLE ? 3600000 : 1200;
     }
 
-    @Override
-    public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
+    @Override @ParametersAreNonnullByDefault
+    public @NotNull InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
         blockPos = blockPos.above(blockState.getValue(HALF) == Half.TOP ? 1 : 2);
         return level.getBlockState(blockPos).getBlock().use(level.getBlockState(blockPos), level, blockPos, player, interactionHand, blockHitResult);
     }
 
-    @Override
+    @Override @ParametersAreNonnullByDefault
     public boolean isPathfindable(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, PathComputationType pathComputationType) {
         return false;
     }
 
     @Override
-    public void onPlace(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState1, boolean b) {
+    public void onPlace(BlockState blockState, Level level, BlockPos blockPos, @NotNull BlockState blockState1, boolean b) {
         level.setBlock(blockPos.above(), blockState.getValue(HALF) == Half.BOTTOM
                 ? this.defaultBlockState().setValue(HALF, Half.TOP)
                 : shrineBlock.defaultBlockState(), 11);

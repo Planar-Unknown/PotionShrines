@@ -32,12 +32,13 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.NetworkHooks;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Optional;
 
 import static com.dreu.potionshrines.blocks.shrine.ShrineBaseBlock.HALF;
-
+@SuppressWarnings({"deprecation", "DataFlowIssue"})
 public class AuraShrineBlock extends Block implements EntityBlock {
     public static final IntegerProperty LIGHT_LEVEL = IntegerProperty.create("light_level", 0, 15);
     public AuraShrineBlock(Properties properties) {
@@ -46,13 +47,13 @@ public class AuraShrineBlock extends Block implements EntityBlock {
                 .setValue(LIGHT_LEVEL, 0));
     }
 
-    @Override
-    public VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
+    @Override @ParametersAreNonnullByDefault 
+    public @NotNull VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
         return Shapes.empty();
     }
 
-    @Override
-    public RenderShape getRenderShape(BlockState p_60550_) {
+    @Override 
+    public @NotNull RenderShape getRenderShape(@NotNull BlockState blockState) {
         return RenderShape.INVISIBLE;
     }
 
@@ -65,8 +66,7 @@ public class AuraShrineBlock extends Block implements EntityBlock {
         return 3600000;
     }
 
-    @Nullable
-    @Override
+    @Override @ParametersAreNonnullByDefault
     public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
         BlockEntity blockEntity = new AuraShrineBlockEntity(blockPos, blockState).fromConfig();
         blockEntity.setChanged();
@@ -102,12 +102,12 @@ public class AuraShrineBlock extends Block implements EntityBlock {
         return super.getCloneItemStack(state, target, level, blockPos, player);
     }
 
+    @ParametersAreNonnullByDefault 
     public boolean triggerEvent(BlockState blockState, Level level, BlockPos blockPos, int i, int i1) {
         super.triggerEvent(blockState, level, blockPos, i, i1);
         return level.getBlockEntity(blockPos) != null && level.getBlockEntity(blockPos).triggerEvent(i, i1);
     }
-    @Nullable
-    @Override
+    @Override @ParametersAreNonnullByDefault
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState blockState, BlockEntityType<T> blockEntityType) {
         return createTickerHelper(blockEntityType, PSBlockEntities.AURA_SHRINE.get(), AuraShrineBlockEntity::tick);
     }
@@ -116,14 +116,13 @@ public class AuraShrineBlock extends Block implements EntityBlock {
         return eBlockEntityType == aBlockEntityType ? (BlockEntityTicker<A>)blockEntityTicker : null;
     }
 
-    @Override
-    public PushReaction getPistonPushReaction(BlockState blockState) {
+    @Override 
+    public @NotNull PushReaction getPistonPushReaction(@NotNull BlockState blockState) {
         return PushReaction.BLOCK;
     }
 
-    @SuppressWarnings("DataFlowIssue")
-    @Override
-    public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
+    @Override  @ParametersAreNonnullByDefault
+    public @NotNull InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
         AuraShrineBlockEntity shrine = (AuraShrineBlockEntity) level.getBlockEntity(blockPos);
         if (shrine == null) return super.use(blockState, level, blockPos, player, interactionHand, blockHitResult);
         if (player.isCreative() && !player.isShiftKeyDown()){
@@ -140,7 +139,7 @@ public class AuraShrineBlock extends Block implements EntityBlock {
         return super.use(blockState, level, blockPos, player, interactionHand, blockHitResult);
     }
 
-    @Override
+    @Override @ParametersAreNonnullByDefault 
     public void onPlace(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState1, boolean b) {
         level.setBlock(blockPos.below(1), PSBlocks.AURA_SHRINE_BASE.get().defaultBlockState().setValue(HALF, Half.TOP), 11);
         level.setBlock(blockPos.below(2), PSBlocks.AURA_SHRINE_BASE.get().defaultBlockState().setValue(HALF, Half.BOTTOM), 11);

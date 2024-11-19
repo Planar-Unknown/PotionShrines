@@ -11,6 +11,7 @@ import net.minecraftforge.registries.RegistryObject;
 import static com.dreu.potionshrines.PotionShrines.EFFECTS;
 import static com.dreu.potionshrines.PotionShrines.MODID;
 import static com.dreu.potionshrines.config.General.XP_BONUS;
+@SuppressWarnings({"unused", "DataFlowIssue"})
 @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class XPBoost extends MobEffect {
     public static final RegistryObject<MobEffect> XP_BOOST = EFFECTS.register("xp_boost", XPBoost::new);

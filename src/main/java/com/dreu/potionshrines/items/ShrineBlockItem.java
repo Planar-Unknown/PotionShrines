@@ -24,13 +24,16 @@ import net.minecraft.world.level.block.state.properties.Half;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
 import static com.dreu.potionshrines.PotionShrines.*;
 import static com.dreu.potionshrines.blocks.shrine.ShrineBaseBlock.HALF;
 
+@SuppressWarnings("DataFlowIssue")
 public class ShrineBlockItem extends BlockItem {
     private final Block baseBlock;
 
@@ -40,7 +43,7 @@ public class ShrineBlockItem extends BlockItem {
     }
 
     @Override
-    protected boolean placeBlock(BlockPlaceContext context, BlockState blockState) {
+    protected boolean placeBlock(BlockPlaceContext context, @NotNull BlockState blockState) {
         return context.getLevel().getEntities(null, new AABB(context.getClickedPos().getX(), context.getClickedPos().getY(), context.getClickedPos().getZ(), context.getClickedPos().getX() + 1, context.getClickedPos().getY() + 2, context.getClickedPos().getZ() + 1))
                 .stream().filter(entity -> entity instanceof LivingEntity).toList().isEmpty()
                 && context.getLevel().getBlockState(context.getClickedPos()).getMaterial().isReplaceable()
@@ -49,20 +52,19 @@ public class ShrineBlockItem extends BlockItem {
                 && context.getLevel().setBlock(context.getClickedPos().above(2), blockState, 11);
     }
 
-    @SuppressWarnings("all")
-    @Override
+    @Override  @ParametersAreNonnullByDefault
     public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> components, TooltipFlag tooltipFlag) {
         CompoundTag nbt = itemStack.getTagElement("BlockEntityTag");
         if (nbt == null) return;
         components.add(Component.translatable(getEffectFromString(nbt.getString("effect")).getDescriptionId()).withStyle(ChatFormatting.BLUE)
                 .append(Component.literal(" " + romanNumerals.get(nbt.getInt("amplifier") + 1)))
                 .append(Component.literal("(" + asTime(nbt.getInt("duration")) + ")")));
-        components.add(Component.translatable("tooltip.potion_shrines.cooldown").withStyle(ChatFormatting.BLUE)
+        components.add(Component.translatable("tooltip." + MODID + ".cooldown").withStyle(ChatFormatting.BLUE)
                 .append(Component.literal(": " + asTime((int) (nbt.getInt("remaining_cooldown") * 0.05)) + "/" + asTime((int) (nbt.getInt("max_cooldown") * 0.05)))).withStyle(Style.EMPTY.withBold(false)));
     }
 
     @Override
-    public InteractionResult place(BlockPlaceContext context) {
+    public @NotNull InteractionResult place(BlockPlaceContext context) {
         if (!context.canPlace()) {
             return InteractionResult.FAIL;
         } else {
@@ -104,7 +106,6 @@ public class ShrineBlockItem extends BlockItem {
             }
         }
     }
-    @SuppressWarnings("all")
     private BlockState updateBlockStateFromTag(BlockPos blockPos, Level level, ItemStack itemStack, BlockState blockState) {
       BlockState blockstate = blockState;
       CompoundTag compoundtag = itemStack.getTag();

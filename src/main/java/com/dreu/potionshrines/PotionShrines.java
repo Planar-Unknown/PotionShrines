@@ -39,7 +39,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 
 import java.io.File;
@@ -48,6 +47,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
 
+import static com.dreu.potionshrines.PotionShrines.MODID;
 import static com.dreu.potionshrines.config.AoEShrine.AOE_SHRINES;
 import static com.dreu.potionshrines.config.AoEShrine.TOTAL_WEIGHT_AOE;
 import static com.dreu.potionshrines.config.AuraShrine.AURA_SHRINES;
@@ -65,7 +65,7 @@ import static com.dreu.potionshrines.registry.PSProcLists.PROC_LISTS;
 import static com.dreu.potionshrines.registry.PSProcTypes.PROCESSOR_TYPES;
 
 @SuppressWarnings("SpellCheckingInspection")
-@Mod(PotionShrines.MODID)
+@Mod(MODID)
 public class PotionShrines {
     public static final String MODID = "potion_shrines";
     public static final Logger LOGGER = LogUtils.getLogger();
@@ -157,7 +157,7 @@ public class PotionShrines {
 
     @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class ClientModEvents {
-        @SubscribeEvent
+        @SubscribeEvent @SuppressWarnings("unused")
         public static void onClientSetup(FMLClientSetupEvent event) {
             MenuScreens.register(PSMenuTypes.SIMPLE_SHRINE_MENU.get(), SimpleShrineScreen::new);
             MenuScreens.register(PSMenuTypes.AOE_SHRINE_MENU.get(), AoEShrineScreen::new);
@@ -168,14 +168,14 @@ public class PotionShrines {
             BlockEntityRenderers.register(PSBlockEntities.AOE_SHRINE.get(), (c) -> new AoEShrineRenderer());
             BlockEntityRenderers.register(PSBlockEntities.AURA_SHRINE.get(), (c) -> new AuraShrineRenderer());
         }
-        @SubscribeEvent
+        @SubscribeEvent @SuppressWarnings("unused")
         public static void registerModels(ModelEvent.RegisterAdditional event){
             for (String icon : SHRINE_ICONS) {
                 event.register(new ResourceLocation(MODID, "icon/" + icon));
             }
             event.register(new ResourceLocation(MODID, "icon/default"));
         }
-        @SubscribeEvent
+        @SubscribeEvent @SuppressWarnings("unused")
         public static void bakeModels(ModelEvent.BakingCompleted event){
             for (String icon : SHRINE_ICONS) {
                 ResourceLocation iconLocation = new ResourceLocation(MODID, "icon/" + icon);
@@ -195,7 +195,7 @@ public class PotionShrines {
             ));
         }
 
-        @SubscribeEvent
+        @SubscribeEvent @SuppressWarnings({"unused", "deprecation"})
         public static void onTextureStitch(TextureStitchEvent.Pre event) {
             if (event.getAtlas().location().equals(TextureAtlas.LOCATION_BLOCKS)) {
                 for (String icon : SHRINE_ICONS) {
@@ -244,19 +244,10 @@ public class PotionShrines {
     public static StructureTemplate.StructureBlockInfo newInfo(BlockPos pos, BlockState state, CompoundTag tag){
         return new StructureTemplate.StructureBlockInfo(pos, state, tag);
     }
-    public static CompoundTag withString(String key, String value){
+    @SafeVarargs
+    public static CompoundTag withStrings(Map.Entry<String, String>... entries){
         CompoundTag a = new CompoundTag();
-        a.putString(key, value);
-        return a;
-    }
-    public static CompoundTag withStrings(Pair<String, String>... keysAndValues){
-        CompoundTag a = new CompoundTag();
-        for (Pair<String, String> pair : keysAndValues) {a.putString(pair.getLeft(), pair.getRight());}
-        return a;
-    }
-    public static CompoundTag withTag(String key, CompoundTag value){
-        CompoundTag a = new CompoundTag();
-        a.put(key, value);
+        for (Map.Entry<String, String> entry : entries) {a.putString(entry.getKey(), entry.getValue());}
         return a;
     }
     public static boolean containsAny(String string, Collection<String> targets){

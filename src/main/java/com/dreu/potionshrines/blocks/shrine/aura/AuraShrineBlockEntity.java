@@ -26,11 +26,16 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+import static com.dreu.potionshrines.PotionShrines.MODID;
 import static com.dreu.potionshrines.PotionShrines.getEffectFromString;
 import static com.dreu.potionshrines.config.AuraShrine.getRandomAuraShrine;
 
+@SuppressWarnings("DataFlowIssue")
 public class AuraShrineBlockEntity extends BlockEntity implements MenuProvider {
     private int maxCooldown = 0, remainingCooldown = 0, auraDuration = 0, remainingDuration = 0, radius = 0, amplifier = 1;
     private String effect = "null", icon = "default";
@@ -54,6 +59,7 @@ public class AuraShrineBlockEntity extends BlockEntity implements MenuProvider {
         return this;
     }
 
+    @SuppressWarnings("unused")
     public static void tick(Level level, BlockPos blockPos, BlockState blockState, AuraShrineBlockEntity shrine) {
         if (shrine.active){
             if (level.getGameTime() % 20 == 1){
@@ -77,6 +83,7 @@ public class AuraShrineBlockEntity extends BlockEntity implements MenuProvider {
             level.getEntitiesOfClass(Player.class, new AABB(blockPos).inflate(shrine.getRadius())).stream()
                     .filter(nearPlayer -> nearPlayer.blockPosition().distSqr(blockPos) <= shrine.getRadius() * shrine.getRadius())
                     .toList().forEach(filteredPlayer -> {
+                        assert mobEffect != null;
                         if (filteredPlayer.hasEffect(mobEffect)) {
                             if (filteredPlayer.getEffect(mobEffect).getAmplifier() >= shrine.getAmplifier() - 1)
                                 filteredPlayer.getEffect(mobEffect).update(new MobEffectInstance(
@@ -136,7 +143,7 @@ public class AuraShrineBlockEntity extends BlockEntity implements MenuProvider {
         super.saveAdditional(nbt);
     }
     @Override
-    public void load(CompoundTag nbt){
+    public void load(@NotNull CompoundTag nbt){
         super.load(nbt);
         setAmplifier(nbt.getInt("amplifier"));
         setRemainingCooldown(nbt.getInt("remaining_cooldown"));
@@ -158,7 +165,7 @@ public class AuraShrineBlockEntity extends BlockEntity implements MenuProvider {
         return ClientboundBlockEntityDataPacket.create(this);
     }
     @Override
-    public CompoundTag getUpdateTag() {
+    public @NotNull CompoundTag getUpdateTag() {
         CompoundTag nbt = new CompoundTag();
         this.saveAdditional(nbt);
         return nbt;
@@ -173,6 +180,7 @@ public class AuraShrineBlockEntity extends BlockEntity implements MenuProvider {
     public int getMaxCooldown(){return maxCooldown;}
     public int getRemainingCooldown(){return remainingCooldown;}
     public int getMaxDuration(){return auraDuration;}
+    @SuppressWarnings("unused")
     public int getRemainingDuration(){return remainingDuration;}
     public int getRadius() {return radius;}
     public boolean canEffectPlayers(){return effectPlayers;}
@@ -191,6 +199,7 @@ public class AuraShrineBlockEntity extends BlockEntity implements MenuProvider {
         if (remainingCooldown < maxCooldown) remainingDuration = 0; 
     }
     public void setMaxDuration(int ticks){auraDuration = Mth.clamp(ticks, 1, 19999980);}
+    @SuppressWarnings("unused")
     public void setRemainingDuration(int ticks){
         remainingDuration = Mth.clamp(ticks, 1, auraDuration);
         if (remainingDuration > 0) remainingCooldown = maxCooldown;
@@ -211,12 +220,12 @@ public class AuraShrineBlockEntity extends BlockEntity implements MenuProvider {
     }
 
     @Override
-    public Component getDisplayName() {
-        return Component.translatable("gui.potion_shrines.shrine_options");
+    public @NotNull Component getDisplayName() {
+        return Component.translatable("gui." + MODID + ".shrine_options");
     }
 
-    @Nullable
     @Override
+    @ParametersAreNonnullByDefault
     public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
         return new AuraShrineMenu(id, this);
     }

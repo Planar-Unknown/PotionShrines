@@ -33,13 +33,14 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.NetworkHooks;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Optional;
 
 import static com.dreu.potionshrines.PotionShrines.getEffectFromString;
 import static com.dreu.potionshrines.blocks.shrine.ShrineBaseBlock.HALF;
-
+@SuppressWarnings({"deprecation", "DataFlowIssue"})
 public class SimpleShrineBlock extends Block implements EntityBlock {
     public static final IntegerProperty LIGHT_LEVEL = IntegerProperty.create("light_level", 0, 15);
     public SimpleShrineBlock(Properties properties) {
@@ -48,13 +49,13 @@ public class SimpleShrineBlock extends Block implements EntityBlock {
                 .setValue(LIGHT_LEVEL, 0));
     }
 
-    @Override
-    public VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
+    @Override @ParametersAreNonnullByDefault
+    public @NotNull VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
         return Shapes.empty();
     }
 
     @Override
-    public RenderShape getRenderShape(BlockState p_60550_) {
+    public @NotNull RenderShape getRenderShape(@NotNull BlockState blockState) {
         return RenderShape.INVISIBLE;
     }
 
@@ -67,8 +68,7 @@ public class SimpleShrineBlock extends Block implements EntityBlock {
         return 3600000;
     }
 
-    @Nullable
-    @Override
+    @Override @ParametersAreNonnullByDefault
     public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
         BlockEntity blockEntity = new SimpleShrineBlockEntity(blockPos, blockState).fromConfig();
         blockEntity.setChanged();
@@ -99,13 +99,12 @@ public class SimpleShrineBlock extends Block implements EntityBlock {
         }
         return super.getCloneItemStack(state, target, level, blockPos, player);
     }
-
+    @ParametersAreNonnullByDefault
     public boolean triggerEvent(BlockState blockState, Level level, BlockPos blockPos, int i, int i1) {
         super.triggerEvent(blockState, level, blockPos, i, i1);
         return level.getBlockEntity(blockPos) != null && level.getBlockEntity(blockPos).triggerEvent(i, i1);
     }
-    @Nullable
-    @Override
+    @Override @ParametersAreNonnullByDefault
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState blockState, BlockEntityType<T> blockEntityType) {
         return createTickerHelper(blockEntityType, PSBlockEntities.SIMPLE_SHRINE.get(), SimpleShrineBlockEntity::tick);
     }
@@ -115,18 +114,18 @@ public class SimpleShrineBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public PushReaction getPistonPushReaction(BlockState blockState) {
+    public @NotNull PushReaction getPistonPushReaction(@NotNull BlockState blockState) {
         return PushReaction.BLOCK;
     }
 
-    @Override
-    public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
+    @Override @ParametersAreNonnullByDefault
+    public @NotNull InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
         SimpleShrineBlockEntity shrine = (SimpleShrineBlockEntity) level.getBlockEntity(blockPos);
         if (player.isCreative() && !player.isShiftKeyDown()){
             if (!level.isClientSide)
                 NetworkHooks.openScreen((ServerPlayer) player, shrine, blockPos);
             return InteractionResult.SUCCESS;
-        } else if (shrine.canUse()) {
+        } else if (shrine != null && shrine.canUse()) {
             shrine.resetCooldown();
             if (!level.isClientSide) {
                 level.playSound(null, blockPos, SoundEvents.BEACON_DEACTIVATE, SoundSource.BLOCKS, 3F, 1F);
@@ -140,7 +139,7 @@ public class SimpleShrineBlock extends Block implements EntityBlock {
         return super.use(blockState, level, blockPos, player, interactionHand, blockHitResult);
     }
 
-    @Override
+    @Override @ParametersAreNonnullByDefault
     public void onPlace(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState1, boolean b) {
         level.setBlock(blockPos.below(1), PSBlocks.SIMPLE_SHRINE_BASE.get().defaultBlockState().setValue(HALF, Half.TOP), 11);
         level.setBlock(blockPos.below(2), PSBlocks.SIMPLE_SHRINE_BASE.get().defaultBlockState().setValue(HALF, Half.BOTTOM), 11);

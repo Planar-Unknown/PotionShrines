@@ -16,6 +16,7 @@ import java.util.Map;
 import static com.dreu.potionshrines.PotionShrines.MODID;
 import static net.minecraft.world.level.block.Blocks.*;
 
+@SuppressWarnings({"OptionalGetWithoutIsPresent", "SpellCheckingInspection"})
 public class PSProcLists {
     public static Map<String, float[]> lootProcessorsMap(){
         Map<String, float[]> map = new HashMap<>();
@@ -31,6 +32,7 @@ public class PSProcLists {
     }
 
     public static final RuleTest Always = AlwaysTrueTest.INSTANCE;
+    @SuppressWarnings("SpellCheckingInspection")
     public static final DeferredRegister<StructureProcessorList> PROC_LISTS = DeferredRegister.create(Registry.PROCESSOR_LIST_REGISTRY, MODID);
     public static final Holder<StructureProcessorList> DUNGEON_STONE_BRICK = PROC_LISTS.register("dungeon_stone_brick",
         () -> new StructureProcessorList(ImmutableList.of(

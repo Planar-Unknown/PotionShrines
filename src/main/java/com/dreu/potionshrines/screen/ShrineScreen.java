@@ -21,16 +21,17 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.dreu.potionshrines.PotionShrines.getBakedIconOrDefault;
-import static com.dreu.potionshrines.PotionShrines.getEffectFromString;
+import static com.dreu.potionshrines.PotionShrines.*;
 import static java.lang.Boolean.parseBoolean;
 import static java.lang.Integer.parseInt;
 import static org.lwjgl.glfw.GLFW.*;
 
+@SuppressWarnings("DataFlowIssue")
 public class ShrineScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T>{
     protected EditBox effectBox, amplifierBox, durationBox, maxCooldownBox;
     protected Button replenishButton, resetCooldownButton, itemNbtButton, blockNbtButton, saveButton;
@@ -78,6 +79,7 @@ public class ShrineScreen<T extends AbstractContainerMenu> extends AbstractConta
         itemNbtButton.active = !effectInvalid;
         blockNbtButton.active = !effectInvalid;
     }
+    @SuppressWarnings("unused")
     protected void onCancelClick(Button button) {
         onClose();
     }
@@ -90,14 +92,14 @@ public class ShrineScreen<T extends AbstractContainerMenu> extends AbstractConta
         }
         updateNbtValidity();
     }
-    protected void onDurationChanged(String newDuration) {
+    protected void onDurationChanged(String newDuration) { //Todo: tf is up with this? we don't check that it doesn't go over the max?
         updateNbtValidity();
     }
     protected void onIconClick(){}
     protected void onBooleanClick(Button button) {
-        button.setMessage(Component.translatable("potion_shrines." + !parseBoolean(button.getMessage().getString())));
+        button.setMessage(Component.translatable(MODID + "." + !parseBoolean(button.getMessage().getString())));
     }
-    protected void onCooldownChanged(String newCooldown) {
+    protected void onCooldownChanged(String newCooldown) { //Todo: this one too?
         updateNbtValidity();
     }
     protected void onEffectChanged(String effectInput) {
@@ -124,7 +126,7 @@ public class ShrineScreen<T extends AbstractContainerMenu> extends AbstractConta
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(@NotNull PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
         super.render(poseStack, mouseX, mouseY, partialTicks);
         if (effectInvalid){
             poseStack.translate(0, 0, 1);
@@ -134,7 +136,7 @@ public class ShrineScreen<T extends AbstractContainerMenu> extends AbstractConta
             vLine(poseStack, leftPos + 235, topPos + 31, topPos + 50, 0xFFFF0000);
         }
         if (resetCooldownButton.isMouseOver(mouseX, mouseY))
-            renderTooltip(poseStack, Component.translatable("gui.potion_shrines.reset_cooldown"), mouseX, mouseY);
+            renderTooltip(poseStack, Component.translatable("gui." + MODID + ".reset_cooldown"), mouseX, mouseY);
         renderIcon(poseStack, partialTicks);
         if (effectBox.isFocused() && !suggestions.isEmpty() && !(suggestions.size() == 1 && suggestions.get(0).equals(effectBox.getValue())))
             renderSuggestionsDropdown(poseStack, mouseX, mouseY);
@@ -160,8 +162,8 @@ public class ShrineScreen<T extends AbstractContainerMenu> extends AbstractConta
             }
         }
     }
-        @Override
-    protected void renderBg(PoseStack poseStack, float partialTicks, int mouseX, int mouseY) {
+    @Override
+    protected void renderBg(@NotNull PoseStack poseStack, float partialTicks, int mouseX, int mouseY) {
         renderBackground(poseStack);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);

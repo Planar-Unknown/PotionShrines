@@ -12,13 +12,16 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Objects;
 
+import static com.dreu.potionshrines.PotionShrines.MODID;
 import static com.dreu.potionshrines.PotionShrines.getBakedIconOrDefault;
 
+@SuppressWarnings("DataFlowIssue")
 public class AuraShrineRenderer implements BlockEntityRenderer<AuraShrineBlockEntity>{
     public AuraShrineRenderer(){}
-    @Override
+    @Override @ParametersAreNonnullByDefault
     public void render(AuraShrineBlockEntity auraShrine, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight, int combinedOverlay) {
         if (!Objects.equals(auraShrine.getEffect(), "null")) {
             float cooldown = auraShrine.getRemainingCooldown();
@@ -98,7 +101,7 @@ public class AuraShrineRenderer implements BlockEntityRenderer<AuraShrineBlockEn
     private static void renderFullCharge(PoseStack poseStack, float uvY) {
         RenderSystem.enableDepthTest();
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, new ResourceLocation("potion_shrines", "textures/block/aoe_recharging.png"));
+        RenderSystem.setShaderTexture(0, new ResourceLocation(MODID, "textures/block/aoe_recharging.png"));
         poseStack.pushPose();
 
         poseStack.translate(0.5, -1.4375, 0.5);

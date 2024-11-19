@@ -6,22 +6,17 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 public class IconSelectionMenu extends AbstractContainerMenu {
-    public IconSelectionMenu(int id, Inventory inventory, FriendlyByteBuf extraData){
-        this(id);
-    }
-    public IconSelectionMenu(int id){
+    @SuppressWarnings("unused") public IconSelectionMenu(int id, Inventory inv, FriendlyByteBuf buf) {this(id);}
+    public IconSelectionMenu(int id) {
         super(PSMenuTypes.ICON_SELECTION_MENU.get() , id);
     }
-
     @Override
-    public ItemStack quickMoveStack(Player player, int i) {
-        return null;
+    public @NotNull ItemStack quickMoveStack(@NotNull Player player, int i) {
+        return player.getInventory().getItem(i);
     }
-
     @Override
-    public boolean stillValid(Player player) {
-        return true;
-    }
+    public boolean stillValid(@NotNull Player player) {return true;}
 }

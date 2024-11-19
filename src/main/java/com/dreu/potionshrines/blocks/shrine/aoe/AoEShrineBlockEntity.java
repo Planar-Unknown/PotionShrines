@@ -24,16 +24,17 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Objects;
 
-import static com.dreu.potionshrines.PotionShrines.getEffectFromString;
-import static com.dreu.potionshrines.PotionShrines.rand;
+import static com.dreu.potionshrines.PotionShrines.*;
 import static com.dreu.potionshrines.blocks.shrine.simple.SimpleShrineBlock.LIGHT_LEVEL;
 import static com.dreu.potionshrines.config.AoEShrine.getRandomAoEShrine;
 import static com.dreu.potionshrines.config.General.SHRINES_REPLENISH;
 
+@SuppressWarnings("DataFlowIssue")
 public class AoEShrineBlockEntity extends BlockEntity implements MenuProvider {
     private int maxCooldown = 0, radius = 0, duration = 0, amplifier = 1, remainingCooldown = 0;
     private String effect = "null", icon = "default";
@@ -63,6 +64,7 @@ public class AoEShrineBlockEntity extends BlockEntity implements MenuProvider {
                     level.playSound(null, blockPos, SoundEvents.BEACON_ACTIVATE, SoundSource.BLOCKS, 3F, 1F);
                 if (shrine.remainingCooldown > shrine.maxCooldown - 29) {
                     MobEffect effect = getEffectFromString(shrine.effect);
+                    assert effect != null;
                     Vector3f color = new Vector3f(
                             (effect.getColor() >> 16 & 0xFF) / 255.0f,
                             (effect.getColor() >> 8 & 0xFF) / 255.0f,
@@ -127,6 +129,7 @@ public class AoEShrineBlockEntity extends BlockEntity implements MenuProvider {
         }
     }
 
+    @SuppressWarnings("unused")
     protected static void updateBase(Level level, BlockPos blockPos, BlockState blockState){
         level.updateNeighborsAt(blockPos.below(1), PSBlocks.AOE_SHRINE_BASE.get());
         level.updateNeighborsAt(blockPos.below(2), PSBlocks.AOE_SHRINE_BASE.get());
@@ -147,7 +150,7 @@ public class AoEShrineBlockEntity extends BlockEntity implements MenuProvider {
         super.saveAdditional(nbt);
     }
     @Override
-    public void load(CompoundTag nbt){
+    public void load(@NotNull CompoundTag nbt){
         super.load(nbt);
         setAmplifier(nbt.getInt("amplifier"));
         setRemainingCooldown(nbt.getInt("remaining_cooldown"));
@@ -161,7 +164,6 @@ public class AoEShrineBlockEntity extends BlockEntity implements MenuProvider {
         setRadius(nbt.getInt("radius"));
     }
 
-    @Nullable
     @Override
     public Packet<ClientGamePacketListener> getUpdatePacket() {
         CompoundTag nbt = new CompoundTag();
@@ -169,15 +171,13 @@ public class AoEShrineBlockEntity extends BlockEntity implements MenuProvider {
         return ClientboundBlockEntityDataPacket.create(this);
     }
     @Override
-    public CompoundTag getUpdateTag() {
+    public @NotNull CompoundTag getUpdateTag() {
         CompoundTag nbt = new CompoundTag();
         this.saveAdditional(nbt);
         return nbt;
     }
-    @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        this.load(pkt.getTag());
-    }
+    @Override @SuppressWarnings("all")
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {this.load(pkt.getTag());}
 
     public String getEffect(){return effect;}
     public int getAmplifier(){return amplifier;}
@@ -212,12 +212,11 @@ public class AoEShrineBlockEntity extends BlockEntity implements MenuProvider {
     }
 
     @Override
-    public Component getDisplayName() {
-        return Component.translatable("gui.potion_shrines.shrine_options");
+    public @NotNull Component getDisplayName() {
+        return Component.translatable("gui." + MODID + ".shrine_options");
     }
 
-    @Nullable
-    @Override
+    @Override @ParametersAreNonnullByDefault
     public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
         return new AoEShrineMenu(id, this);
     }

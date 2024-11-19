@@ -15,6 +15,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
@@ -36,11 +37,11 @@ public class SimpleShrineScreen extends ShrineScreen<SimpleShrineMenu> implement
     protected void initialize() {
         resetCooldownButton = new Button(leftPos + 81, topPos + 65, NUMBER_BOX_WIDTH, 20, Component.literal(String.valueOf(menu.shrineEntity.getRemainingCooldown() / 20)), this::onCooldownClick);
         blockNbtButton = new Button(leftPos + 47, topPos + 166, NUMBER_BOX_WIDTH, 20,
-                Component.translatable("gui.potion_shrines.blockNbt"), this::onCopyBlockNbtClick);
+                Component.translatable("gui." + MODID + ".blockNbt"), this::onCopyBlockNbtClick);
         itemNbtButton = new Button(leftPos + 113, topPos + 166, NUMBER_BOX_WIDTH, 20,
-                Component.translatable("gui.potion_shrines.itemNbt"), this::onCopyItemNbtClick);
+                Component.translatable("gui." + MODID + ".itemNbt"), this::onCopyItemNbtClick);
         saveButton = new Button(leftPos + 222, topPos + 166, NUMBER_BOX_WIDTH, 20,
-                Component.translatable("gui.potion_shrines.save"), this::onSaveClick);
+                Component.translatable("gui." + MODID + ".save"), this::onSaveClick);
 
         effectBox = new EditBox(font, leftPos + 8, topPos + 32, EFFECT_BOX_WIDTH, EDIT_BOX_HEIGHT, Component.literal(""));
         effectBox.setMaxLength(100);
@@ -74,7 +75,7 @@ public class SimpleShrineScreen extends ShrineScreen<SimpleShrineMenu> implement
         maxCooldownBox.setValue(String.valueOf(menu.shrineEntity.getMaxCooldown() / 20));
 
         replenishButton = new Button(leftPos + 222, topPos + 66, NUMBER_BOX_WIDTH, 20,
-                Component.translatable("potion_shrines." + menu.shrineEntity.canReplenish()), this::onBooleanClick);
+                Component.translatable(MODID + "." + menu.shrineEntity.canReplenish()), this::onBooleanClick);
         suggestions = new ArrayList<>();
         icon = menu.shrineEntity.getIcon();
     }
@@ -92,9 +93,9 @@ public class SimpleShrineScreen extends ShrineScreen<SimpleShrineMenu> implement
         addRenderableWidget(saveButton);
 
         addRenderableWidget(new Button(leftPos + 222, topPos + 99, NUMBER_BOX_WIDTH, 20,
-                Component.translatable("gui.potion_shrines.reset"), this::onResetClick));
+                Component.translatable("gui." + MODID + ".reset"), this::onResetClick));
         addRenderableWidget(new Button(leftPos + 222, topPos + 132, NUMBER_BOX_WIDTH, 20,
-                Component.translatable("gui.potion_shrines.cancel"), this::onCancelClick));
+                Component.translatable("gui." + MODID + ".cancel"), this::onCancelClick));
     }
 
     @Override
@@ -128,7 +129,7 @@ public class SimpleShrineScreen extends ShrineScreen<SimpleShrineMenu> implement
         tag.putBoolean("replenish", parseBoolean(replenishButton.getMessage().getString()));
         tag.putString("icon", icon);
 
-        this.minecraft.keyboardHandler.setClipboard(tag.getAsString());
+        Minecraft.getInstance().keyboardHandler.setClipboard(tag.getAsString());
     }
     protected void onCopyItemNbtClick(Button button){
         CompoundTag tag = new CompoundTag();
@@ -142,13 +143,14 @@ public class SimpleShrineScreen extends ShrineScreen<SimpleShrineMenu> implement
         CompoundTag compoundTag = new CompoundTag();
         compoundTag.put("BlockEntityTag", tag);
 
-        this.minecraft.keyboardHandler.setClipboard(compoundTag.getAsString());
+        Minecraft.getInstance().keyboardHandler.setClipboard(compoundTag.getAsString());
     }
     @Override
     protected void onIconClick() {
+        assert Minecraft.getInstance().player != null;
         Minecraft.getInstance().setScreen(new IconSelectionScreen(
                 new IconSelectionMenu(this.menu.containerId),
-                this.minecraft.player.getInventory(),
+                Minecraft.getInstance().player.getInventory(),
                 Component.literal("Icon Selection")).withReturnScreen(this));
     }
     protected void onResetClick(Button button) {
@@ -157,7 +159,7 @@ public class SimpleShrineScreen extends ShrineScreen<SimpleShrineMenu> implement
         durationBox.setValue(String.valueOf(menu.shrineEntity.getDuration() / 20));
         maxCooldownBox.setValue(String.valueOf(menu.shrineEntity.getMaxCooldown() / 20));
         icon = menu.shrineEntity.getIcon();
-        replenishButton.setMessage(Component.translatable("potion_shrines." + menu.shrineEntity.canReplenish()));
+        replenishButton.setMessage(Component.translatable(MODID + "." + menu.shrineEntity.canReplenish()));
     }
     protected void onSaveClick(Button button) {
         if (getEffectFromString(effectBox.getValue()) == null) {
@@ -188,7 +190,7 @@ public class SimpleShrineScreen extends ShrineScreen<SimpleShrineMenu> implement
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(@NotNull PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
         RenderSystem.enableDepthTest();
         super.render(poseStack, mouseX, mouseY, partialTicks);
         if (suggestions.isEmpty()) {
@@ -205,15 +207,15 @@ public class SimpleShrineScreen extends ShrineScreen<SimpleShrineMenu> implement
         RenderSystem.disableDepthTest();
     }
     @Override
-    protected void renderLabels(PoseStack poseStack, int mouseX, int mouseY) {
+    protected void renderLabels(@NotNull PoseStack poseStack, int mouseX, int mouseY) {
         font.draw(poseStack, title, 47 - font.width(title.getVisualOrderText()) * 0.5f, titleLabelY, 4210752);
-        font.draw(poseStack, Component.translatable("gui.potion_shrines.effect").append(Component.translatable("gui.potion_shrines.tab_hint")), titleLabelX, 22, 4210752);
-        font.draw(poseStack, Component.translatable("gui.potion_shrines.amplifier"), 243, 22, 4210752);
-        font.draw(poseStack, Component.translatable("gui.potion_shrines.duration"), titleLabelX, 56, 4210752);
-        font.draw(poseStack, Component.translatable("tooltip.potion_shrines.cooldown"), 82, 56, 4210752);
-        font.draw(poseStack, Component.translatable("tooltip.potion_shrines.max"), 148, 56, 4210752); //
-        font.draw(poseStack, Component.translatable("tooltip.potion_shrines.replenish"), 222, 56, 4210752);
-        font.draw(poseStack, Component.translatable("tooltip.potion_shrines.icon"), 85, 90, 4210752);
+        font.draw(poseStack, Component.translatable("gui." + MODID + ".effect").append(Component.translatable("gui." + MODID + ".tab_hint")), titleLabelX, 22, 4210752);
+        font.draw(poseStack, Component.translatable("gui." + MODID + ".amplifier"), 243, 22, 4210752);
+        font.draw(poseStack, Component.translatable("gui." + MODID + ".duration"), titleLabelX, 56, 4210752);
+        font.draw(poseStack, Component.translatable("tooltip." + MODID + ".cooldown"), 82, 56, 4210752);
+        font.draw(poseStack, Component.translatable("tooltip." + MODID + ".max"), 148, 56, 4210752); //
+        font.draw(poseStack, Component.translatable("tooltip." + MODID + ".replenish"), 222, 56, 4210752);
+        font.draw(poseStack, Component.translatable("tooltip." + MODID + ".icon"), 85, 90, 4210752);
     }
     @Override
     protected boolean isMouseOverIcon(int mouseX, int mouseY){

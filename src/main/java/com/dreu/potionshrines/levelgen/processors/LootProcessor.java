@@ -10,40 +10,36 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlac
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
-import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
-
-import java.util.*;
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import static com.dreu.potionshrines.PotionShrines.*;
 import static com.dreu.potionshrines.registry.PSProcTypes.LOOT_PROCESSOR;
 import static net.minecraft.world.level.block.ChestBlock.FACING;
 
 public class LootProcessor extends StructureProcessor {
-    static CompoundTag[] lootOptions = new CompoundTag[]{
+    static final CompoundTag[] lootOptions = new CompoundTag[]{
             null,
-            withStrings(Pair.of("LootTable", MODID + ":chests/dungeons/common"), Pair.of("id", "minecraft:chest")),
-            withStrings(Pair.of("LootTable", MODID + ":chests/dungeons/uncommon"), Pair.of("id", "minecraft:chest")),
-            withStrings(Pair.of("LootTable", MODID + ":chests/dungeons/rare"), Pair.of("id", "minecraft:chest")),
-            withStrings(Pair.of("LootTable", MODID + ":chests/dungeons/mythical"), Pair.of("id", "minecraft:chest")),
+            withStrings(Map.entry("LootTable", MODID + ":chests/dungeons/common"), Map.entry("id", "minecraft:chest")),
+            withStrings(Map.entry("LootTable", MODID + ":chests/dungeons/uncommon"), Map.entry("id", "minecraft:chest")),
+            withStrings(Map.entry("LootTable", MODID + ":chests/dungeons/rare"), Map.entry("id", "minecraft:chest")),
+            withStrings(Map.entry("LootTable", MODID + ":chests/dungeons/mythical"), Map.entry("id", "minecraft:chest")),
     };
     public static final Codec<LootProcessor> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.unboundedMap(Codec.STRING, Codec.FLOAT.listOf().xmap(
                     list -> {
-                        // Convert List<Float> to float[]
                         float[] array = new float[list.size()];
-                        for (int i = 0; i < list.size(); i++) {
-                            array[i] = list.get(i);
-                        }
+                        for (int i = 0; i < list.size(); i++) {array[i] = list.get(i);}
                         return array;
                     },
                     array -> {
-                        // Convert float[] to List<Float>
                         List<Float> list = new ArrayList<>(array.length);
-                        for (float value : array) {
-                            list.add(value);
-                        }
+                        for (float value : array) {list.add(value);}
                         return list;
                     }
             )).fieldOf("processors").forGetter(processor -> processor.processors)
@@ -54,7 +50,8 @@ public class LootProcessor extends StructureProcessor {
         this.processors = processors;
     }
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unused", "ConstantValue"})
+    @ParametersAreNonnullByDefault
     public StructureTemplate.StructureBlockInfo process(LevelReader levelReader, BlockPos blockPos, BlockPos origin, StructureTemplate.StructureBlockInfo worldBlock, StructureTemplate.StructureBlockInfo structureBlock, StructurePlaceSettings settings, @Nullable StructureTemplate template) {
         if (!structureBlock.state.is(Blocks.CHEST) || structureBlock.nbt == null || !structureBlock.nbt.contains("LootTable") || !containsAny(structureBlock.nbt.getString("LootTable"), processors.keySet())) {return structureBlock;}
 
@@ -68,15 +65,13 @@ public class LootProcessor extends StructureProcessor {
                 if (lootOptions[i] == null){
                     return newInfo(structureBlock.pos, df(Blocks.AIR), null);
                 }
-                System.out.println("With: ");
-                System.out.println(newInfo(structureBlock.pos, df(Blocks.CHEST).setValue(FACING, structureBlock.state.getValue(FACING)), lootOptions[i]));
                 return newInfo(structureBlock.pos, df(Blocks.CHEST).setValue(FACING, structureBlock.state.getValue(FACING)), lootOptions[i]);
             }
         }
         return newInfo(structureBlock.pos, df(Blocks.CHEST).setValue(FACING, structureBlock.state.getValue(FACING)), lootOptions[4]);
     }
     @Override
-    public StructureProcessorType<?> getType() {
+    public @NotNull StructureProcessorType<?> getType() {
         return LOOT_PROCESSOR.get();
     }
 

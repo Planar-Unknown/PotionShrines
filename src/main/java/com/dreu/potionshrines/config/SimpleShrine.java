@@ -2,12 +2,12 @@ package com.dreu.potionshrines.config;
 
 import com.electronwill.nightconfig.core.Config;
 import com.electronwill.nightconfig.toml.TomlParser;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
+import java.util.Map;
 
 import static com.dreu.potionshrines.PotionShrines.rand;
-
+@SuppressWarnings("unused")
 public class SimpleShrine extends PSConfig{
     static final String defaultConfig =
             """
@@ -238,9 +238,9 @@ public class SimpleShrine extends PSConfig{
             Weight = 5
             Icon = "slow_falling"
             """;
-    private static final Pair<Config, String> CONFIG = getConfigOrDefault("shrines", defaultConfig);
+    private static final Map.Entry<Config, String> CONFIG = getConfigOrDefault("shrines",defaultConfig);
     private static final Config CONFIG_DEFAULT = new TomlParser().parse(defaultConfig);
-    public static final List<Config> SHRINES = CONFIG.getLeft().get("Shrine");
+    public static final List<Config> SHRINES = CONFIG.getKey().get("Shrine");
     public static double TOTAL_WEIGHT = 0;
 
     public static Config getRandomShrine() {
