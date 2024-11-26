@@ -53,6 +53,7 @@ public class LootProcessor extends StructureProcessor {
     @SuppressWarnings({"unused", "ConstantValue"})
     @ParametersAreNonnullByDefault
     public StructureTemplate.StructureBlockInfo process(LevelReader levelReader, BlockPos blockPos, BlockPos origin, StructureTemplate.StructureBlockInfo worldBlock, StructureTemplate.StructureBlockInfo structureBlock, StructurePlaceSettings settings, @Nullable StructureTemplate template) {
+        if (settings.shouldKeepLiquids()) settings.setKeepLiquids(false);
         if (!structureBlock.state.is(Blocks.CHEST) || structureBlock.nbt == null || !structureBlock.nbt.contains("LootTable") || !containsAny(structureBlock.nbt.getString("LootTable"), processors.keySet())) {return structureBlock;}
 
         float[] weights = processors.get(structureBlock.nbt.getString("LootTable"));
