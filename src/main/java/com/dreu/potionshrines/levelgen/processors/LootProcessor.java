@@ -57,24 +57,22 @@ public class LootProcessor extends StructureProcessor {
                         : newInfo(structureBlock.pos, df(Blocks.CHEST).setValue(FACING, structureBlock.state.getValue(FACING)), lootOptions[i]);
             }
         }
-        return null; //temp crash fix, don't leave this here
-//        throw new IllegalStateException("LootProcessor failed because the weights for Chest Type: [" + structureBlock.nbt.getString("LootTable") + "] do not properly accumulate up to 1.0");
+        throw new IllegalStateException("LootProcessor failed because the weights for Chest Type: [" + structureBlock.nbt.getString("LootTable") + "] do not properly accumulate up to 1.0");
     }
     @Override public @NotNull StructureProcessorType<?> getType() {return LOOT_PROCESSOR.get();}
     public static final String COMMON = MODID + ":chests/dungeons/common", UNCOMMON = MODID + ":chests/dungeons/uncommon", RARE = MODID + ":chests/dungeons/rare", EPIC = MODID + ":chests/dungeons/epic", LEGENDARY = MODID + ":chests/dungeons/legendary", GG = "_guaranteed";
-    public static final Map<String, float[]> LOOT_PROCESSOR_RULES = new HashMap<>();
-    static {
-        LOOT_PROCESSOR_RULES.put(    COMMON,     new float[]{/*Empty*/75.00F, /*Common*/20.00F, /*Uncommon*/04.50F, /*Rare*/00.50F, /*Epic*/00.00F, /*Legendary*/00.00F});
-        LOOT_PROCESSOR_RULES.put(   UNCOMMON,    new float[]{/*Empty*/20.00F, /*Common*/30.00F, /*Uncommon*/40.00F, /*Rare*/09.50F, /*Epic*/00.50F, /*Legendary*/00.00F});
-        LOOT_PROCESSOR_RULES.put(     RARE,      new float[]{/*Empty*/00.00F, /*Common*/20.00F, /*Uncommon*/30.00F, /*Rare*/40.00F, /*Epic*/09.50F, /*Legendary*/00.50F});
-        LOOT_PROCESSOR_RULES.put(     EPIC,      new float[]{/*Empty*/00.00F, /*Common*/00.00F, /*Uncommon*/20.00F, /*Rare*/30.00F, /*Epic*/40.00F, /*Legendary*/10.00F});
-        LOOT_PROCESSOR_RULES.put(   LEGENDARY,   new float[]{/*Empty*/00.00F, /*Common*/00.00F, /*Uncommon*/00.00F, /*Rare*/20.00F, /*Epic*/30.00F, /*Legendary*/50.00F});
+    public static final HashMap<String, float[]> LOOT_PROCESSOR_RULES = (HashMap<String, float[]>) Map.ofEntries(
+            Map.entry(    COMMON,     new float[]{/*Empty*/75.00F, /*Common*/20.00F, /*Uncommon*/04.50F, /*Rare*/00.50F, /*Epic*/00.00F, /*Legendary*/00.00F}),
+            Map.entry(   UNCOMMON,    new float[]{/*Empty*/20.00F, /*Common*/30.00F, /*Uncommon*/40.00F, /*Rare*/09.50F, /*Epic*/00.50F, /*Legendary*/00.00F}),
+            Map.entry(     RARE,      new float[]{/*Empty*/00.00F, /*Common*/20.00F, /*Uncommon*/30.00F, /*Rare*/40.00F, /*Epic*/09.50F, /*Legendary*/00.50F}),
+            Map.entry(     EPIC,      new float[]{/*Empty*/00.00F, /*Common*/00.00F, /*Uncommon*/20.00F, /*Rare*/30.00F, /*Epic*/40.00F, /*Legendary*/10.00F}),
+            Map.entry(   LEGENDARY,   new float[]{/*Empty*/00.00F, /*Common*/00.00F, /*Uncommon*/00.00F, /*Rare*/20.00F, /*Epic*/30.00F, /*Legendary*/50.00F}),
 
-        LOOT_PROCESSOR_RULES.put(  COMMON + GG,  new float[]{0, /*Common*/100, 0, 0, 0, 0});
-        LOOT_PROCESSOR_RULES.put( UNCOMMON + GG, new float[]{0, 0, /*Uncommon*/100, 0, 0, 0});
-        LOOT_PROCESSOR_RULES.put(   RARE + GG,   new float[]{0, 0, 0, /*Rare*/100, 0, 0});
-        LOOT_PROCESSOR_RULES.put(   EPIC + GG,   new float[]{0, 0, 0, 0, /*Epic*/100, 0});
-        LOOT_PROCESSOR_RULES.put( LEGENDARY + GG,new float[]{0, 0, 0, 0, 0, /*Legendary*/100});
-    }
+            Map.entry(  COMMON + GG,  new float[]{0, /*Common*/100, 0, 0, 0, 0}),
+            Map.entry( UNCOMMON + GG, new float[]{0, 0, /*Uncommon*/100, 0, 0, 0}),
+            Map.entry(   RARE + GG,   new float[]{0, 0, 0, /*Rare*/100, 0, 0}),
+            Map.entry(   EPIC + GG,   new float[]{0, 0, 0, 0, /*Epic*/100, 0}),
+            Map.entry( LEGENDARY + GG,new float[]{0, 0, 0, 0, 0, /*Legendary*/100})
+    );
 }
 
