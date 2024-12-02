@@ -1,0 +1,10 @@
+{
+  "parent": "potion_shrines:block/loot_crate/crate_gem",
+  "textures": {
+    "north_gem": "potion_shrines:block/loot_crate/rare_north_gem",
+    "south_gem": "potion_shrines:block/loot_crate/rare_south_gem",
+    "east_gem": "potion_shrines:block/loot_crate/rare_east_gem",
+    "west_gem": "potion_shrines:block/loot_crate/rare_west_gem",
+    "particle": "#north_gem"
+  }
+}
