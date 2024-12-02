@@ -1,13 +1,15 @@
 package com.dreu.potionshrines.registry;
 
+import com.dreu.potionshrines.blocks.crate.LootCrateBlock;
 import com.dreu.potionshrines.blocks.shrine.DecrepitShrineBlock;
+import com.dreu.potionshrines.blocks.shrine.ShrineBaseBlock;
 import com.dreu.potionshrines.blocks.shrine.aoe.AoEShrineBlock;
 import com.dreu.potionshrines.blocks.shrine.aura.AuraShrineBlock;
-import com.dreu.potionshrines.blocks.shrine.ShrineBaseBlock;
 import com.dreu.potionshrines.blocks.shrine.simple.SimpleShrineBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.material.Material;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -19,6 +21,9 @@ import static com.dreu.potionshrines.config.General.SHRINE_INDESTRUCTIBLE;
 
 public class PSBlocks {
         public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, MODID);
+
+        public static  final RegistryObject<Block> LOOT_CRATE = BLOCKS.register("loot_crate",
+                () -> new LootCrateBlock(BlockBehaviour.Properties.of(Material.WOOD)));
 
         public static final RegistryObject<Block> SIMPLE_SHRINE = BLOCKS.register("simple_shrine",
                 () -> new SimpleShrineBlock(BlockBehaviour.Properties.copy(Blocks.STONE)
@@ -67,4 +72,10 @@ public class PSBlocks {
                 () -> new DecrepitShrineBlock(BlockBehaviour.Properties.copy(Blocks.STONE).strength(5),
                         AURA_BOTTOM_SHAPE,
                         AURA_TOP_SHAPE));
+//        @SuppressWarnings("SameParameterValue")
+//        private static <T extends Block> RegistryObject<T> registerBlockAndItem(String name, Supplier<T> block, CreativeModeTab tab) {
+//                RegistryObject<T> registeredBlock = BLOCKS.register(name, block);
+//                ITEMS.register(name, () -> new BlockItem(registeredBlock.get(), new Item.Properties().tab(tab)));
+//                return registeredBlock;
+//        }
 }

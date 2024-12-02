@@ -72,7 +72,7 @@ public class PotionShrines {
     public static final Random rand = new Random();
     public static final Map<String, BakedModel> BAKED_ICONS = new HashMap<>();
     public static final Set<String> SHRINE_ICONS = new HashSet<>();
-    public static final int EDIT_BOX_HEIGHT = 18;
+    public static final int EDIT_BOX_HEIGHT = 18, COMMON_HEX = 0x858d6d, UNCOMMON_HEX = 0x78a126, RARE_HEX = 0x3de0e5, EPIC_HEX = 0x9553cc, LEGENDARY_HEX = 0xe8af4d;
     public static final DeferredRegister<MobEffect> EFFECTS = DeferredRegister.create(ForgeRegistries.MOB_EFFECTS, MODID);
     static {
         //____Structures____
@@ -155,7 +155,7 @@ public class PotionShrines {
         }
     }
 
-    @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+    @SuppressWarnings("unused") @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class ClientModEvents {
         @SubscribeEvent @SuppressWarnings("unused")
         public static void onClientSetup(FMLClientSetupEvent event) {
