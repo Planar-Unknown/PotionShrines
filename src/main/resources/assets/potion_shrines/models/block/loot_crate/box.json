@@ -1,5 +1,6 @@
 {
 	"credit": "Made with Blockbench",
+	"ambientocclusion": false,
 	"textures": {
 		"0": "potion_shrines:block/loot_crate/sides",
 		"1": "potion_shrines:block/loot_crate/edges",

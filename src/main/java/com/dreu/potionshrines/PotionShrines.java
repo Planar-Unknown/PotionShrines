@@ -81,6 +81,7 @@ public class PotionShrines {
 
         //____Icon Resource Pack____
         ExampleResourcePack.generate();
+
         SHRINES.forEach(shrine -> TOTAL_WEIGHT += shrine.getInt("Weight"));
         AOE_SHRINES.forEach(shrine -> TOTAL_WEIGHT_AOE += shrine.getInt("Weight"));
         AURA_SHRINES.forEach(shrine -> TOTAL_WEIGHT_AURA += shrine.getInt("Weight"));
