@@ -37,7 +37,7 @@ import static com.dreu.potionshrines.config.AuraShrine.getRandomAuraShrine;
 
 @SuppressWarnings("DataFlowIssue")
 public class AuraShrineBlockEntity extends BlockEntity implements MenuProvider {
-    private int maxCooldown = 0, remainingCooldown = 0, auraDuration = 0, remainingDuration = 0, radius = 0, amplifier = 1;
+    private int maxCooldown = 0, remainingCooldown = 0, maxDuration = 0, remainingDuration = 0, radius = 0, amplifier = 1;
     private String effect = "null", icon = "default";
     private boolean effectPlayers = false, effectMonsters = false, replenish = true, active = false;
 
@@ -48,7 +48,7 @@ public class AuraShrineBlockEntity extends BlockEntity implements MenuProvider {
     public AuraShrineBlockEntity fromConfig() {
         Config aoeShrine = getRandomAuraShrine();
         amplifier = Mth.clamp((int) aoeShrine.get("Amplifier") - 1, 1, 256);
-        auraDuration = Mth.clamp(aoeShrine.get("AuraDuration"), 1, 999999) * 20;
+        maxDuration = Mth.clamp(aoeShrine.get("AuraDuration"), 1, 999999) * 20;
         maxCooldown = Mth.clamp(aoeShrine.get("Cooldown"), 3, 999999) * 20;
         replenish = aoeShrine.get("Replenish");
         effect = aoeShrine.get("Effect");
@@ -68,7 +68,6 @@ public class AuraShrineBlockEntity extends BlockEntity implements MenuProvider {
             shrine.remainingDuration--;
             if (shrine.remainingDuration == 0) {
                 shrine.active = false;
-                shrine.remainingCooldown = shrine.maxCooldown;
             }
         } else if (shrine.remainingCooldown > 0) shrine.remainingCooldown--;
                 
@@ -131,7 +130,7 @@ public class AuraShrineBlockEntity extends BlockEntity implements MenuProvider {
     @Override
     protected void saveAdditional(CompoundTag nbt) {
         nbt.putString("effect", effect);
-        nbt.putInt("duration", auraDuration);
+        nbt.putInt("duration", maxDuration);
         nbt.putInt("max_cooldown", maxCooldown);
         nbt.putBoolean("replenish", replenish);
         nbt.putInt("remaining_cooldown", remainingCooldown);
@@ -179,7 +178,7 @@ public class AuraShrineBlockEntity extends BlockEntity implements MenuProvider {
     public int getAmplifier(){return amplifier;}
     public int getMaxCooldown(){return maxCooldown;}
     public int getRemainingCooldown(){return remainingCooldown;}
-    public int getMaxDuration(){return auraDuration;}
+    public int getMaxDuration(){return maxDuration;}
     @SuppressWarnings("unused")
     public int getRemainingDuration(){return remainingDuration;}
     public int getRadius() {return radius;}
@@ -198,10 +197,13 @@ public class AuraShrineBlockEntity extends BlockEntity implements MenuProvider {
         remainingCooldown = Mth.clamp(ticks, 0, maxCooldown);
         if (remainingCooldown < maxCooldown) remainingDuration = 0; 
     }
-    public void setMaxDuration(int ticks){auraDuration = Mth.clamp(ticks, 1, 19999980);}
+    public void setMaxDuration(int ticks){
+        maxDuration = Mth.clamp(ticks, 1, 19999980);
+        if (remainingDuration > maxDuration) remainingDuration = maxDuration;
+    }
     @SuppressWarnings("unused")
     public void setRemainingDuration(int ticks){
-        remainingDuration = Mth.clamp(ticks, 1, auraDuration);
+        remainingDuration = Mth.clamp(ticks, 1, maxDuration);
         if (remainingDuration > 0) remainingCooldown = maxCooldown;
     }
     public void setRadius(int blocks){radius = Mth.clamp(blocks, 3, 64);}
@@ -211,12 +213,12 @@ public class AuraShrineBlockEntity extends BlockEntity implements MenuProvider {
     public void setIcon(String name){icon = name;}
 
     public boolean canUse() {
-        return remainingCooldown == 0;
+        return remainingCooldown == 0 ;
     }
     public void activateAura(){
         active = true;
         remainingCooldown = maxCooldown;
-        remainingDuration = auraDuration;
+        remainingDuration = maxDuration;
     }
 
     @Override

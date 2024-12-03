@@ -24,8 +24,8 @@ import static java.lang.Boolean.parseBoolean;
 import static java.lang.Integer.parseInt;
 
 public class AuraShrineScreen extends ShrineScreen<AuraShrineMenu> implements IconScreen<AuraShrineScreen> {
-    private EditBox radiusBox;
-    private Button effectMonstersButton, effectPlayersButton;
+    private EditBox radiusBox, maxDurationBox;
+    private Button effectMonstersButton, effectPlayersButton, resetDurationButton;
 
     public AuraShrineScreen(AuraShrineMenu auraShrineMenu, Inventory inventory, Component component) {
         super(auraShrineMenu, inventory, component);
@@ -37,65 +37,70 @@ public class AuraShrineScreen extends ShrineScreen<AuraShrineMenu> implements Ic
     }
     @Override
     protected void containerTick() {
-        super.containerTick();
+        cooldownDelay -= cooldownDelay > 0 ? 1 : 0;
+        effectBox.tick();
+        amplifierBox.tick();
+        maxDurationBox.tick();
+        maxCooldownBox.tick();
         radiusBox.tick();
     }
 
     @Override
     protected void initialize() {
         saveButton = new Button(leftPos + 222, topPos + 166, NUMBER_BOX_WIDTH, 20, Component.translatable("gui." + MODID + ".save"), this::onSaveClick);
-            resetCooldownButton = new Button(leftPos + 81, topPos + 65, NUMBER_BOX_WIDTH, 20, Component.literal(String.valueOf(menu.shrineEntity.getRemainingCooldown() / 20)), this::onCooldownClick);
-            blockNbtButton = new Button(leftPos + 82, topPos + 166, NUMBER_BOX_WIDTH, 20, Component.translatable("gui." + MODID + ".blockNbt"), this::onCopyBlockNbtClick);
-            itemNbtButton = new Button(leftPos + 148, topPos + 166, NUMBER_BOX_WIDTH, 20, Component.translatable("gui." + MODID + ".itemNbt"), this::onCopyItemNbtClick);
+        resetCooldownButton = new Button(leftPos + 125, topPos + 65, 55, 20, Component.literal(String.valueOf(menu.shrineEntity.getRemainingCooldown() / 20)), this::onCooldownClick);
+        resetDurationButton = new Button(leftPos + 8, topPos + 65, 55, 20, Component.literal(String.valueOf(menu.shrineEntity.getRemainingDuration() / 20)), this::onCooldownClick);
+        blockNbtButton = new Button(leftPos + 82, topPos + 166, NUMBER_BOX_WIDTH, 20, Component.translatable("gui." + MODID + ".blockNbt"), this::onCopyBlockNbtClick);
+        itemNbtButton = new Button(leftPos + 148, topPos + 166, NUMBER_BOX_WIDTH, 20, Component.translatable("gui." + MODID + ".itemNbt"), this::onCopyItemNbtClick);
 
-            effectBox = new EditBox(font, leftPos + 8, topPos + 32, EFFECT_BOX_WIDTH, EDIT_BOX_HEIGHT, Component.literal(""));
-            effectBox.setMaxLength(100);
-            effectBox.setVisible(true);
-            effectBox.setTextColor(0xFFFFFF);
-            effectBox.setResponder(this::onEffectChanged);
-            effectBox.setValue(menu.shrineEntity.getEffect());
+        effectBox = new EditBox(font, leftPos + 8, topPos + 32, EFFECT_BOX_WIDTH, EDIT_BOX_HEIGHT, Component.literal(""));
+        effectBox.setMaxLength(100);
+        effectBox.setVisible(true);
+        effectBox.setTextColor(0xFFFFFF);
+        effectBox.setResponder(this::onEffectChanged);
+        effectBox.setValue(menu.shrineEntity.getEffect());
 
-            amplifierBox = new EditBox(font, leftPos + 243, topPos + 32, 45, EDIT_BOX_HEIGHT, Component.literal(""));
-            amplifierBox.setMaxLength(3);
-            amplifierBox.setVisible(true);
-            amplifierBox.setTextColor(0xFFFFFF);
-            amplifierBox.setResponder(this::onAmplifierChanged);
-            amplifierBox.setFilter((s -> s.matches("\\d*")));
-            amplifierBox.setValue(String.valueOf(menu.shrineEntity.getAmplifier()));
+        amplifierBox = new EditBox(font, leftPos + 243, topPos + 32, 45, EDIT_BOX_HEIGHT, Component.literal(""));
+        amplifierBox.setMaxLength(3);
+        amplifierBox.setVisible(true);
+        amplifierBox.setTextColor(0xFFFFFF);
+        amplifierBox.setResponder(this::onAmplifierChanged);
+        amplifierBox.setFilter((s -> s.matches("\\d*")));
+        amplifierBox.setValue(String.valueOf(menu.shrineEntity.getAmplifier()));
 
-            durationBox = new EditBox(font, leftPos + 8, topPos + 66, NUMBER_BOX_WIDTH, EDIT_BOX_HEIGHT, Component.literal(""));
-            durationBox.setMaxLength(6);
-            durationBox.setVisible(true);
-            durationBox.setTextColor(0xFFFFFF);
-            durationBox.setResponder(this::onDurationChanged);
-            durationBox.setFilter((s -> s.matches("\\d*")));
-            durationBox.setValue(String.valueOf(menu.shrineEntity.getMaxDuration() / 20));
+        maxDurationBox = new EditBox(font, leftPos + 63, topPos + 66, 55, EDIT_BOX_HEIGHT, Component.literal(""));
+        maxDurationBox.setMaxLength(6);
+        maxDurationBox.setVisible(true);
+        maxDurationBox.setTextColor(0xFFFFFF);
+        maxDurationBox.setResponder(this::onDurationChanged);
+        maxDurationBox.setFilter((s -> s.matches("\\d*")));
+        maxDurationBox.setValue(String.valueOf(menu.shrineEntity.getMaxDuration() / 20));
 
 
-            maxCooldownBox = new EditBox(font, leftPos + 148, topPos + 66, NUMBER_BOX_WIDTH, EDIT_BOX_HEIGHT, Component.literal(""));
-            maxCooldownBox.setMaxLength(6);
-            maxCooldownBox.setVisible(true);
-            maxCooldownBox.setTextColor(0xFFFFFF);
-            maxCooldownBox.setResponder(this::onCooldownChanged);
-            maxCooldownBox.setFilter((s -> s.matches("\\d*")));
-            maxCooldownBox.setValue(String.valueOf(menu.shrineEntity.getMaxCooldown() / 20));
+        maxCooldownBox = new EditBox(font, leftPos + 180, topPos + 66, 55, EDIT_BOX_HEIGHT, Component.literal(""));
+        maxCooldownBox.setMaxLength(6);
+        maxCooldownBox.setVisible(true);
+        maxCooldownBox.setTextColor(0xFFFFFF);
+        maxCooldownBox.setResponder(this::onCooldownChanged);
+        maxCooldownBox.setFilter((s -> s.matches("\\d*")));
+        maxCooldownBox.setValue(String.valueOf(menu.shrineEntity.getMaxCooldown() / 20));
 
-            radiusBox = new EditBox(font, leftPos + 222, topPos + 66, NUMBER_BOX_WIDTH, EDIT_BOX_HEIGHT, Component.literal(""));
-            radiusBox.setMaxLength(2);
-            radiusBox.setVisible(true);
-            radiusBox.setTextColor(0xFFFFFF);
-            radiusBox.setResponder(this::onRadiusChanged);
-            radiusBox.setFilter((s -> s.matches("\\d*")));
-            radiusBox.setValue(String.valueOf(menu.shrineEntity.getRadius()));
+        radiusBox = new EditBox(font, leftPos + 243, topPos + 66, 45, EDIT_BOX_HEIGHT, Component.literal(""));
+        radiusBox.setMaxLength(2);
+        radiusBox.setVisible(true);
+        radiusBox.setTextColor(0xFFFFFF);
+        radiusBox.setResponder(this::onRadiusChanged);
+        radiusBox.setFilter((s -> s.matches("\\d*")));
+        radiusBox.setValue(String.valueOf(menu.shrineEntity.getRadius()));
 
-            effectPlayersButton = new Button(leftPos + 8, topPos + 99, NUMBER_BOX_WIDTH, 20,
-                    Component.translatable(MODID + "." + menu.shrineEntity.canEffectPlayers()), this::onBooleanClick);
-            effectMonstersButton = new Button(leftPos + 8, topPos + 132, NUMBER_BOX_WIDTH, 20,
-                    Component.translatable(MODID + "." + menu.shrineEntity.canEffectMonsters()), this::onBooleanClick);
-            replenishButton = new Button(leftPos + 8, topPos + 166, NUMBER_BOX_WIDTH, 20,
-                    Component.translatable(MODID + "." + menu.shrineEntity.canReplenish()), this::onBooleanClick);
-            suggestions = new ArrayList<>();
-            icon = menu.shrineEntity.getIcon();
+        effectPlayersButton = new Button(leftPos + 8, topPos + 99, NUMBER_BOX_WIDTH, 20,
+                Component.translatable(MODID + "." + menu.shrineEntity.canEffectPlayers()), this::onBooleanClick);
+        effectMonstersButton = new Button(leftPos + 8, topPos + 132, NUMBER_BOX_WIDTH, 20,
+                Component.translatable(MODID + "." + menu.shrineEntity.canEffectMonsters()), this::onBooleanClick);
+        replenishButton = new Button(leftPos + 8, topPos + 166, NUMBER_BOX_WIDTH, 20,
+                Component.translatable(MODID + "." + menu.shrineEntity.canReplenish()), this::onBooleanClick);
+        suggestions = new ArrayList<>();
+        icon = menu.shrineEntity.getIcon();
     }
 
     @Override
@@ -104,19 +109,21 @@ public class AuraShrineScreen extends ShrineScreen<AuraShrineMenu> implements Ic
         effectBox.y = topPos + 32;
         amplifierBox.x = leftPos + 243;
         amplifierBox.y = topPos + 32;
-        durationBox.x = leftPos + 8;
-        durationBox.y = topPos + 66;
-        resetCooldownButton.x = leftPos + 81;
+        maxDurationBox.x = leftPos + 63;
+        maxDurationBox.y = topPos + 66;
+        resetCooldownButton.x = leftPos + 125;
         resetCooldownButton.y = topPos + 65;
+        resetDurationButton.x = leftPos + 8;
+        resetDurationButton.y = topPos + 65;
         saveButton.x = leftPos + 222;
         saveButton.y = topPos + 166;
         blockNbtButton.x = leftPos + 82;
         blockNbtButton.y = topPos + 166;
         itemNbtButton.x = leftPos + 148;
         itemNbtButton.y = topPos + 166;
-        maxCooldownBox.x = leftPos + 148;
+        maxCooldownBox.x = leftPos + 180;
         maxCooldownBox.y = topPos + 66;
-        radiusBox.x = leftPos + 222;
+        radiusBox.x = leftPos + 243;
         radiusBox.y = topPos + 66;
         effectPlayersButton.x = leftPos + 8;
         effectPlayersButton.y = topPos + 99;
@@ -130,8 +137,9 @@ public class AuraShrineScreen extends ShrineScreen<AuraShrineMenu> implements Ic
     protected void addWidgets() {
         addRenderableWidget(effectBox);
         addRenderableWidget(amplifierBox);
-        addRenderableWidget(durationBox);
+        addRenderableWidget(maxDurationBox);
         addRenderableWidget(resetCooldownButton);
+        addRenderableWidget(resetDurationButton);
         addRenderableWidget(maxCooldownBox);
         addRenderableWidget(radiusBox);
         addRenderableWidget(saveButton);
@@ -151,7 +159,7 @@ public class AuraShrineScreen extends ShrineScreen<AuraShrineMenu> implements Ic
         CompoundTag tag = new CompoundTag();
         tag.putString("effect", effectBox.getValue());
         tag.putInt("amplifier", parseInt(amplifierBox.getValue()));
-        tag.putInt("duration", parseInt(durationBox.getValue()) * 20);
+        tag.putInt("duration", parseInt(maxDurationBox.getValue()) * 20);
         tag.putInt("max_cooldown", parseInt(maxCooldownBox.getValue()) * 20);
         tag.putInt("radius", parseInt(radiusBox.getValue()));
         tag.putInt("remaining_cooldown", parseInt(resetCooldownButton.getMessage().getString()) * 20);
@@ -167,7 +175,7 @@ public class AuraShrineScreen extends ShrineScreen<AuraShrineMenu> implements Ic
         CompoundTag tag = new CompoundTag();
         tag.putString("effect", effectBox.getValue());
         tag.putInt("amplifier", parseInt(amplifierBox.getValue()));
-        tag.putInt("duration", parseInt(durationBox.getValue()) * 20);
+        tag.putInt("duration", parseInt(maxDurationBox.getValue()) * 20);
         tag.putInt("max_cooldown", parseInt(maxCooldownBox.getValue()) * 20);
         tag.putInt("radius", parseInt(radiusBox.getValue()));
         tag.putInt("remaining_cooldown", parseInt(resetCooldownButton.getMessage().getString()) * 20);
@@ -191,7 +199,7 @@ public class AuraShrineScreen extends ShrineScreen<AuraShrineMenu> implements Ic
     protected void onResetClick(Button button) {
         effectBox.setValue(menu.shrineEntity.getEffect());
         amplifierBox.setValue(String.valueOf(menu.shrineEntity.getAmplifier()));
-        durationBox.setValue(String.valueOf(menu.shrineEntity.getMaxDuration() / 20));
+        maxDurationBox.setValue(String.valueOf(menu.shrineEntity.getMaxDuration() / 20));
         maxCooldownBox.setValue(String.valueOf(menu.shrineEntity.getMaxCooldown() / 20));
         radiusBox.setValue(String.valueOf(menu.shrineEntity.getRadius()));
         icon = menu.shrineEntity.getIcon();
@@ -210,8 +218,8 @@ public class AuraShrineScreen extends ShrineScreen<AuraShrineMenu> implements Ic
         menu.shrineEntity.setEffect(effectBox.getValue());
         if (!amplifierBox.getValue().isEmpty())
             menu.shrineEntity.setAmplifier(parseInt(amplifierBox.getValue()));
-        if (!durationBox.getValue().isEmpty())
-            menu.shrineEntity.setMaxDuration(parseInt(durationBox.getValue()) * 20);
+        if (!maxDurationBox.getValue().isEmpty())
+            menu.shrineEntity.setMaxDuration(parseInt(maxDurationBox.getValue()) * 20);
         if (!maxCooldownBox.getValue().isEmpty())
             menu.shrineEntity.setMaxCooldown(parseInt(maxCooldownBox.getValue()) * 20);
         if (!radiusBox.getValue().isEmpty())
@@ -233,6 +241,12 @@ public class AuraShrineScreen extends ShrineScreen<AuraShrineMenu> implements Ic
         ));
         onClose();
     }
+
+    @Override
+    protected void onDurationChanged(String newDuration) {
+        updateNbtValidity();
+    }
+
     private void onRadiusChanged(String newRadius) {
         if (!newRadius.isEmpty() && parseInt(newRadius) > 64) {
             radiusBox.setValue("64");
@@ -246,7 +260,8 @@ public class AuraShrineScreen extends ShrineScreen<AuraShrineMenu> implements Ic
         super.render(poseStack, mouseX, mouseY, partialTicks);
         if (suggestions.isEmpty()) {
             resetCooldownButton.setMessage(Component.literal(String.valueOf(menu.shrineEntity.getRemainingCooldown() / 20)));
-            resetCooldownButton.active = !(menu.shrineEntity.getRemainingCooldown() == 0);
+            resetDurationButton.setMessage(Component.literal(String.valueOf(menu.shrineEntity.getRemainingDuration() / 20)));
+            resetCooldownButton.active = !(menu.shrineEntity.getRemainingCooldown() == 0 || menu.shrineEntity.getRemainingDuration() == 0);
             if (isMouseOverIcon(mouseX, mouseY)) {
                 poseStack.translate(0, 0, 1);
                 hLine(poseStack, leftPos + 120, leftPos + 171, topPos + 100, 0xFF80ff80);
@@ -262,10 +277,9 @@ public class AuraShrineScreen extends ShrineScreen<AuraShrineMenu> implements Ic
         font.draw(poseStack, title, 47 - font.width(title.getVisualOrderText()) * 0.5f, titleLabelY, 4210752);
         font.draw(poseStack, Component.translatable("gui." + MODID + ".effect").append(Component.translatable("gui." + MODID + ".tab_hint")), titleLabelX, 22, 4210752);
         font.draw(poseStack, Component.translatable("gui." + MODID + ".amplifier"), 243, 22, 4210752);
-        font.draw(poseStack, Component.translatable("gui." + MODID + ".duration"), titleLabelX, 56, 4210752);
-        font.draw(poseStack, Component.translatable("tooltip." + MODID + ".cooldown"), 82, 56, 4210752);
-        font.draw(poseStack, Component.translatable("tooltip." + MODID + ".max"), 148, 56, 4210752); //
-        font.draw(poseStack, Component.translatable("tooltip." + MODID + ".radius"), 222, 56, 4210752);
+        font.draw(poseStack, Component.translatable("gui." + MODID + ".duration"), 9, 56, 4210752);
+        font.draw(poseStack, Component.translatable("tooltip." + MODID + ".cooldown"), 126, 56, 4210752);
+        font.draw(poseStack, Component.translatable("tooltip." + MODID + ".radius"), 243, 56, 4210752);
         font.draw(poseStack, Component.translatable("tooltip." + MODID + ".players"), 9, 90, 4210752);
         font.draw(poseStack, Component.translatable("tooltip." + MODID + ".monsters"), 9, 123, 4210752);
         font.draw(poseStack, Component.translatable("tooltip." + MODID + ".replenish"), 9, 157, 4210752);

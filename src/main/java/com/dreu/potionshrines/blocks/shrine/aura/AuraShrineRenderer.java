@@ -109,10 +109,10 @@ public class AuraShrineRenderer implements BlockEntityRenderer<AuraShrineBlockEn
 
         buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
         for (int i = 0; i < 4; i++) {
-            buffer.vertex(poseStack.last().pose(), -0.125f, 0.0f, 0.1251f).uv(0, 1).endVertex();
-            buffer.vertex(poseStack.last().pose(), 0.125f, 0.0f, 0.1251f).uv(1, 1).endVertex();
-            buffer.vertex(poseStack.last().pose(), 0.125f, uvY, 0.1251f).uv(1, 1 - uvY).endVertex();
-            buffer.vertex(poseStack.last().pose(), -0.125f, uvY, 0.1251f).uv(0, 1 - uvY).endVertex();
+            buffer.vertex(poseStack.last().pose(), -0.0625f, 0.0f, 0.06251f).uv(0, 1).endVertex();
+            buffer.vertex(poseStack.last().pose(), 0.0625f, 0.0f, 0.06251f).uv(1, 1).endVertex();
+            buffer.vertex(poseStack.last().pose(), 0.0625f, uvY, 0.06251f).uv(1, 1 - uvY).endVertex();
+            buffer.vertex(poseStack.last().pose(), -0.0625f, uvY, 0.06251f).uv(0, 1 - uvY).endVertex();
             poseStack.mulPose(Vector3f.YP.rotationDegrees(90));
         }
         Tesselator.getInstance().end();
