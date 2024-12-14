@@ -4,8 +4,6 @@ import com.dreu.potionshrines.blocks.shrine.aoe.AoEShrineRenderer;
 import com.dreu.potionshrines.blocks.shrine.aura.AuraShrineRenderer;
 import com.dreu.potionshrines.blocks.shrine.simple.SimpleShrineRenderer;
 import com.dreu.potionshrines.config.ExampleResourcePack;
-import com.dreu.potionshrines.levelgen.structures.Structures;
-import com.dreu.potionshrines.levelgen.structures.TemplatePools;
 import com.dreu.potionshrines.network.PacketHandler;
 import com.dreu.potionshrines.registry.PSBlockEntities;
 import com.dreu.potionshrines.registry.PSMenuTypes;
@@ -20,13 +18,8 @@ import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -61,8 +54,6 @@ import static com.dreu.potionshrines.registry.PSFeatures.FEATURES;
 import static com.dreu.potionshrines.registry.PSFeatures.Placed.PLACED_FEATURES;
 import static com.dreu.potionshrines.registry.PSItems.ITEMS;
 import static com.dreu.potionshrines.registry.PSMenuTypes.MENUS;
-import static com.dreu.potionshrines.registry.PSProcLists.PROC_LISTS;
-import static com.dreu.potionshrines.registry.PSProcTypes.PROCESSOR_TYPES;
 
 @SuppressWarnings("SpellCheckingInspection")
 @Mod(MODID)
@@ -72,13 +63,9 @@ public class PotionShrines {
     public static final Random rand = new Random();
     public static final Map<String, BakedModel> BAKED_ICONS = new HashMap<>();
     public static final Set<String> SHRINE_ICONS = new HashSet<>();
-    public static final int EDIT_BOX_HEIGHT = 18, COMMON_HEX = 0x858d6d, UNCOMMON_HEX = 0x78a126, RARE_HEX = 0x3de0e5, EPIC_HEX = 0x9553cc, LEGENDARY_HEX = 0xe8af4d;
+    public static final int EDIT_BOX_HEIGHT = 18;
     public static final DeferredRegister<MobEffect> EFFECTS = DeferredRegister.create(ForgeRegistries.MOB_EFFECTS, MODID);
     static {
-        //____Structures____
-        TemplatePools.register();
-        Structures.registerSets();
-
         //____Icon Resource Pack____
         ExampleResourcePack.generate();
 
@@ -128,8 +115,6 @@ public class PotionShrines {
         PLACED_FEATURES.register(eventBus);
         MENUS.register(eventBus);
         EFFECTS.register(eventBus);
-        PROC_LISTS.register(eventBus);
-        PROCESSOR_TYPES.register(eventBus);
 
         PacketHandler.register();
 
@@ -239,22 +224,5 @@ public class PotionShrines {
     public static String asTime(int seconds) {return String.format("%d:%02d", seconds / 60, seconds % 60);}
     public static BakedModel getBakedIconOrDefault(String key) {
         return BAKED_ICONS.get(key) == null ? BAKED_ICONS.get("default") : BAKED_ICONS.get(key);
-    }
-    public static BlockState df(Block block){return block.defaultBlockState();}
-    public static BlockState df(BlockState block){return block.getBlock().defaultBlockState();}
-    public static StructureTemplate.StructureBlockInfo newInfo(BlockPos pos, BlockState state, CompoundTag tag){
-        return new StructureTemplate.StructureBlockInfo(pos, state, tag);
-    }
-    @SafeVarargs
-    public static CompoundTag withStrings(Map.Entry<String, String>... entries){
-        CompoundTag a = new CompoundTag();
-        for (Map.Entry<String, String> entry : entries) {a.putString(entry.getKey(), entry.getValue());}
-        return a;
-    }
-    public static boolean containsAny(String string, Collection<String> targets){
-        for (String target : targets){
-            if (string.contains(target)) return true;
-        }
-        return false;
     }
 }

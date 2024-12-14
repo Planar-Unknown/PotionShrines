@@ -25,24 +25,24 @@ public class PSConfig {
     static int getIntOrDefault(String key, Map.Entry<Config, String> config, Config defaultConfig) {
         try {
             if ((config.getKey().get(key) == null)) {
-                LOGGER.error("Key [" + key + "] is missing from Config: " + config.getValue());
+                LOGGER.error("Key [{}] is missing from Config: {}", key, config.getValue());
                 return defaultConfig.get(key);
             }
             return config.getKey().get(key);
         } catch (Exception e) {
-            LOGGER.error("Value for [" + key + "] is an invalid type in Config: " + config.getValue());
+            LOGGER.error("Value for [{}] is an invalid type in Config: {}", key, config.getValue());
             return defaultConfig.get(key);
         }
     }
     static boolean getBooleanOrDefault(String key, Map.Entry<Config, String> config, Config defaultConfig) {
         try {
             if ((config.getKey().get(key) == null)) {
-                LOGGER.error("Key [" + key + "] is missing from Config: " + config.getValue());
+                LOGGER.error("Key [{}] is missing from Config: {}", key, config.getValue());
                 return defaultConfig.get(key);
             }
             return config.getKey().get(key);
         } catch (Exception e) {
-            LOGGER.error("Value for [" + key + "] is an invalid type in Config: " + config.getValue());
+            LOGGER.error("Value for [{}] is an invalid type in Config: {}", key, config.getValue());
             return defaultConfig.get(key);
         }
     }

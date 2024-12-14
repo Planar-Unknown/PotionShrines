@@ -9,6 +9,7 @@ displayName="${mod_name}"
 logoFile="shrines_icon.png"
 credits="Thanks Fleece and Anise"
 authors="${mod_authors}"
+displayTest="MATCH_VERSION"
 
 description='''${mod_description}'''
 [[dependencies.${mod_id}]]
