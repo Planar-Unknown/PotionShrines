@@ -1,7 +1,7 @@
 package com.dreu.potionshrines.screen.simple;
 
 import com.dreu.potionshrines.network.PacketHandler;
-import com.dreu.potionshrines.network.SaveSimpleShrinePacket;
+import com.dreu.potionshrines.network.SyncSimpleShrinePacket;
 import com.dreu.potionshrines.screen.IconScreen;
 import com.dreu.potionshrines.screen.IconSelectionMenu;
 import com.dreu.potionshrines.screen.IconSelectionScreen;
@@ -178,7 +178,7 @@ public class SimpleShrineScreen extends ShrineScreen<SimpleShrineMenu> implement
             menu.shrineEntity.setMaxCooldown(parseInt(maxCooldownBox.getValue()) * 20);
         menu.shrineEntity.setCanReplenish(parseBoolean(replenishButton.getMessage().getString()));
         menu.shrineEntity.setIcon(icon);
-        PacketHandler.CHANNEL.sendToServer(new SaveSimpleShrinePacket(
+        PacketHandler.CHANNEL.sendToServer(new SyncSimpleShrinePacket(
                 menu.shrineEntity.getEffect(),
                 menu.shrineEntity.getAmplifier(),
                 menu.shrineEntity.getDuration(),

@@ -2,7 +2,7 @@ package com.dreu.potionshrines.screen.aoe;
 
 import com.dreu.potionshrines.network.PacketHandler;
 import com.dreu.potionshrines.network.ResetCooldownPacket;
-import com.dreu.potionshrines.network.SaveAoEShrinePacket;
+import com.dreu.potionshrines.network.SyncAoEShrinePacket;
 import com.dreu.potionshrines.screen.IconScreen;
 import com.dreu.potionshrines.screen.IconSelectionMenu;
 import com.dreu.potionshrines.screen.IconSelectionScreen;
@@ -39,6 +39,9 @@ public class AoEShrineScreen extends ShrineScreen<AoEShrineMenu> implements Icon
     @Override
     protected void containerTick() {
         super.containerTick();
+        resetCooldownButton.setMessage(Component.literal(String.valueOf(menu.shrineEntity.getRemainingCooldown() / 20)));
+        if (menu.shrineEntity.getRemainingCooldown() == 0) resetCooldownButton.active = false;
+        else resetCooldownButton.active = (cooldownDelay == 0);
         radiusBox.tick();
     }
 
@@ -222,7 +225,7 @@ public class AoEShrineScreen extends ShrineScreen<AoEShrineMenu> implements Icon
         menu.shrineEntity.setCanEffectMonsters(parseBoolean(effectMonstersButton.getMessage().getString()));
         menu.shrineEntity.setCanReplenish(parseBoolean(replenishButton.getMessage().getString()));
         menu.shrineEntity.setIcon(icon);
-        PacketHandler.CHANNEL.sendToServer(new SaveAoEShrinePacket(
+        PacketHandler.CHANNEL.sendToServer(new SyncAoEShrinePacket(
                 effectBox.getValue(),
                 menu.shrineEntity.getAmplifier(),
                 menu.shrineEntity.getDuration(),
@@ -250,13 +253,9 @@ public class AoEShrineScreen extends ShrineScreen<AoEShrineMenu> implements Icon
     }
     @Override
     public void render(@NotNull PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
-
         RenderSystem.enableDepthTest();
         super.render(poseStack, mouseX, mouseY, partialTicks);
         if (suggestions.isEmpty()) {
-            resetCooldownButton.setMessage(Component.literal(String.valueOf(menu.shrineEntity.getRemainingCooldown() / 20)));
-            if (menu.shrineEntity.getRemainingCooldown() == 0) resetCooldownButton.active = false;
-            else resetCooldownButton.active = (cooldownDelay == 0);
             if (isMouseOverIcon(mouseX, mouseY)) {
                 poseStack.translate(0, 0, 1);
                 hLine(poseStack, leftPos + 120, leftPos + 171, topPos + 100, 0xFF80ff80);

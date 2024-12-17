@@ -65,10 +65,9 @@ public class AuraShrineBlockEntity extends BlockEntity implements MenuProvider {
             if (level.getGameTime() % 20 == 1){
                 effectEntities(level, blockPos, shrine);
             }
-            shrine.remainingDuration--;
-            if (shrine.remainingDuration == 0) {
-                shrine.active = false;
-            }
+            if (shrine.remainingDuration > 0)
+                shrine.remainingDuration--;
+            else shrine.active = false;
         } else if (shrine.remainingCooldown > 0) shrine.remainingCooldown--;
                 
         if (shrine.getLevel().getGameTime() % 2 == 1) {
@@ -77,6 +76,7 @@ public class AuraShrineBlockEntity extends BlockEntity implements MenuProvider {
     }
 
     private static void effectEntities(Level level, BlockPos blockPos, AuraShrineBlockEntity shrine) {
+        if (level.isClientSide) return;
         if (shrine.canEffectPlayers()) {
             MobEffect mobEffect = getEffectFromString(shrine.getEffect());
             level.getEntitiesOfClass(Player.class, new AABB(blockPos).inflate(shrine.getRadius())).stream()
@@ -195,7 +195,7 @@ public class AuraShrineBlockEntity extends BlockEntity implements MenuProvider {
     }
     public void setRemainingCooldown(int ticks){
         remainingCooldown = Mth.clamp(ticks, 0, maxCooldown);
-        if (remainingCooldown < maxCooldown) remainingDuration = 0; 
+        if (remainingCooldown < maxCooldown) remainingDuration = 0;
     }
     public void setMaxDuration(int ticks){
         maxDuration = Mth.clamp(ticks, 1, 19999980);
@@ -230,5 +230,13 @@ public class AuraShrineBlockEntity extends BlockEntity implements MenuProvider {
     @ParametersAreNonnullByDefault
     public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
         return new AuraShrineMenu(id, this);
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

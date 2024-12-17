@@ -17,8 +17,8 @@ public class PacketHandler {
 
     public static void register() {
         CHANNEL.registerMessage(0, ResetCooldownPacket.class, ((r, b) -> {}), byteBuf -> new ResetCooldownPacket(), ResetCooldownPacket::handle);
-        CHANNEL.registerMessage(1, SaveAoEShrinePacket.class, SaveAoEShrinePacket::toBytes, SaveAoEShrinePacket::new, SaveAoEShrinePacket::handle);
-        CHANNEL.registerMessage(2, SaveSimpleShrinePacket.class, SaveSimpleShrinePacket::toBytes, SaveSimpleShrinePacket::new, SaveSimpleShrinePacket::handle);
-        CHANNEL.registerMessage(3, SaveAuraShrinePacket.class, SaveAuraShrinePacket::toBytes, SaveAuraShrinePacket::new, SaveAuraShrinePacket::handle);
+        CHANNEL.registerMessage(1, SyncAoEShrinePacket.class, SyncAoEShrinePacket::toBytes, SyncAoEShrinePacket::new, SyncAoEShrinePacket::handle);
+        CHANNEL.registerMessage(2, SyncSimpleShrinePacket.class, SyncSimpleShrinePacket::toBytes, SyncSimpleShrinePacket::new, SyncSimpleShrinePacket::handle);
+        CHANNEL.registerMessage(3, SyncAuraShrinePacket.class, SyncAuraShrinePacket::toBytes, SyncAuraShrinePacket::new, SyncAuraShrinePacket::handle);
     }
 }

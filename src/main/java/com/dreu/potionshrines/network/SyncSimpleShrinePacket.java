@@ -8,11 +8,11 @@ import net.minecraftforge.network.NetworkEvent;
 import java.nio.charset.StandardCharsets;
 import java.util.function.Supplier;
 
-public class SaveSimpleShrinePacket {
+public class SyncSimpleShrinePacket {
     private final String effect, icon;
     private final int amplifier, duration, maxCooldown;
     private final boolean replenish;
-    public SaveSimpleShrinePacket(String effect, int amplifier, int duration, int maxCooldown, boolean replenish, String icon){
+    public SyncSimpleShrinePacket(String effect, int amplifier, int duration, int maxCooldown, boolean replenish, String icon){
         this.effect = effect;
         this.amplifier = amplifier;
         this.duration = duration;
@@ -20,7 +20,7 @@ public class SaveSimpleShrinePacket {
         this.replenish = replenish;
         this.icon = icon;
     }
-    public SaveSimpleShrinePacket(FriendlyByteBuf buffer) {
+    public SyncSimpleShrinePacket(FriendlyByteBuf buffer) {
         effect = buffer.readCharSequence(buffer.readInt(), StandardCharsets.UTF_8).toString();
         amplifier = buffer.readInt();
         duration = buffer.readInt();

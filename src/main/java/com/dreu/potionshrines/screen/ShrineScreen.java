@@ -48,7 +48,7 @@ public class ShrineScreen<T extends AbstractContainerMenu> extends AbstractConta
     }
     @Override
     protected void containerTick() {
-        cooldownDelay -= cooldownDelay > 0 ? 1 : 0;
+        if (cooldownDelay > 0) cooldownDelay--;
         effectBox.tick();
         amplifierBox.tick();
         durationBox.tick();
@@ -135,7 +135,7 @@ public class ShrineScreen<T extends AbstractContainerMenu> extends AbstractConta
             vLine(poseStack, leftPos + 7, topPos + 31, topPos + 50, 0xFFFF0000);
             vLine(poseStack, leftPos + 235, topPos + 31, topPos + 50, 0xFFFF0000);
         }
-        if (resetCooldownButton.isMouseOver(mouseX, mouseY))
+        if (suggestions.isEmpty() && resetCooldownButton.isMouseOver(mouseX, mouseY))
             renderTooltip(poseStack, Component.translatable("gui." + MODID + ".reset_cooldown"), mouseX, mouseY);
         renderIcon(poseStack, partialTicks);
         if (effectBox.isFocused() && !suggestions.isEmpty() && !(suggestions.size() == 1 && suggestions.get(0).equals(effectBox.getValue())))

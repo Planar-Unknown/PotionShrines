@@ -1,7 +1,8 @@
 package com.dreu.potionshrines.screen.aura;
 
 import com.dreu.potionshrines.network.PacketHandler;
-import com.dreu.potionshrines.network.SaveAuraShrinePacket;
+import com.dreu.potionshrines.network.ResetCooldownPacket;
+import com.dreu.potionshrines.network.SyncAuraShrinePacket;
 import com.dreu.potionshrines.screen.IconScreen;
 import com.dreu.potionshrines.screen.IconSelectionMenu;
 import com.dreu.potionshrines.screen.IconSelectionScreen;
@@ -37,7 +38,13 @@ public class AuraShrineScreen extends ShrineScreen<AuraShrineMenu> implements Ic
     }
     @Override
     protected void containerTick() {
-        cooldownDelay -= cooldownDelay > 0 ? 1 : 0;
+        resetCooldownButton.setMessage(Component.literal(String.valueOf(menu.shrineEntity.getRemainingCooldown() / 20)));
+        resetDurationButton.setMessage(Component.literal(String.valueOf(menu.shrineEntity.getRemainingDuration() / 20)));
+        boolean areButtonsActive =!(menu.shrineEntity.getRemainingCooldown() == 0 && menu.shrineEntity.getRemainingDuration() == 0);
+        resetCooldownButton.active = areButtonsActive;
+        resetDurationButton.active = areButtonsActive;
+
+        if (cooldownDelay > 0) cooldownDelay--;
         effectBox.tick();
         amplifierBox.tick();
         maxDurationBox.tick();
@@ -189,6 +196,12 @@ public class AuraShrineScreen extends ShrineScreen<AuraShrineMenu> implements Ic
         Minecraft.getInstance().keyboardHandler.setClipboard(compoundTag.getAsString());
     }
     @Override
+    protected void onCooldownClick(Button button) {
+        menu.shrineEntity.setRemainingCooldown(0);
+        menu.shrineEntity.setActive(false);
+        PacketHandler.CHANNEL.sendToServer(new ResetCooldownPacket());
+    }
+    @Override
     protected void onIconClick() {
         assert Minecraft.getInstance().player != null;
         Minecraft.getInstance().setScreen(new IconSelectionScreen(
@@ -224,11 +237,13 @@ public class AuraShrineScreen extends ShrineScreen<AuraShrineMenu> implements Ic
             menu.shrineEntity.setMaxCooldown(parseInt(maxCooldownBox.getValue()) * 20);
         if (!radiusBox.getValue().isEmpty())
             menu.shrineEntity.setRadius(parseInt(radiusBox.getValue()));
+        menu.shrineEntity.setRemainingDuration(parseInt(resetDurationButton.getMessage().getString()) * 20);
+        menu.shrineEntity.setRemainingCooldown(parseInt(resetCooldownButton.getMessage().getString()) * 20);
         menu.shrineEntity.setCanEffectPlayers(parseBoolean(effectPlayersButton.getMessage().getString()));
         menu.shrineEntity.setCanEffectMonsters(parseBoolean(effectMonstersButton.getMessage().getString()));
         menu.shrineEntity.setCanReplenish(parseBoolean(replenishButton.getMessage().getString()));
         menu.shrineEntity.setIcon(icon);
-        PacketHandler.CHANNEL.sendToServer(new SaveAuraShrinePacket(
+        PacketHandler.CHANNEL.sendToServer(new SyncAuraShrinePacket(
                 effectBox.getValue(),
                 menu.shrineEntity.getAmplifier(),
                 menu.shrineEntity.getMaxDuration(),
@@ -237,14 +252,12 @@ public class AuraShrineScreen extends ShrineScreen<AuraShrineMenu> implements Ic
                 menu.shrineEntity.canEffectPlayers(),
                 menu.shrineEntity.canEffectMonsters(),
                 menu.shrineEntity.canReplenish(),
-                icon
+                icon,
+                menu.shrineEntity.isActive(),
+                menu.shrineEntity.getRemainingDuration(),
+                menu.shrineEntity.getRemainingCooldown()
         ));
         onClose();
-    }
-
-    @Override
-    protected void onDurationChanged(String newDuration) {
-        updateNbtValidity();
     }
 
     private void onRadiusChanged(String newRadius) {
@@ -255,13 +268,11 @@ public class AuraShrineScreen extends ShrineScreen<AuraShrineMenu> implements Ic
     }
     @Override
     public void render(@NotNull PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
-
         RenderSystem.enableDepthTest();
         super.render(poseStack, mouseX, mouseY, partialTicks);
         if (suggestions.isEmpty()) {
-            resetCooldownButton.setMessage(Component.literal(String.valueOf(menu.shrineEntity.getRemainingCooldown() / 20)));
-            resetDurationButton.setMessage(Component.literal(String.valueOf(menu.shrineEntity.getRemainingDuration() / 20)));
-            resetCooldownButton.active = !(menu.shrineEntity.getRemainingCooldown() == 0 || menu.shrineEntity.getRemainingDuration() == 0);
+            if (resetDurationButton.isMouseOver(mouseX, mouseY))
+                renderTooltip(poseStack, Component.translatable("gui." + MODID + ".reset_cooldown"), mouseX, mouseY);
             if (isMouseOverIcon(mouseX, mouseY)) {
                 poseStack.translate(0, 0, 1);
                 hLine(poseStack, leftPos + 120, leftPos + 171, topPos + 100, 0xFF80ff80);

@@ -8,11 +8,11 @@ import net.minecraftforge.network.NetworkEvent;
 import java.nio.charset.StandardCharsets;
 import java.util.function.Supplier;
 
-public class SaveAoEShrinePacket {
+public class SyncAoEShrinePacket {
     private final String effect, icon;
     private final int amplifier, duration, maxCooldown, radius;
     private final boolean effectPlayers, effectMonsters, replenish;
-    public SaveAoEShrinePacket(String effect, int amplifier, int duration, int maxCooldown, int radius, boolean effectPlayers, boolean effectMonsters, boolean replenish, String icon){
+    public SyncAoEShrinePacket(String effect, int amplifier, int duration, int maxCooldown, int radius, boolean effectPlayers, boolean effectMonsters, boolean replenish, String icon){
         this.effect = effect;
         this.amplifier = amplifier;
         this.duration = duration;
@@ -23,7 +23,7 @@ public class SaveAoEShrinePacket {
         this.replenish = replenish;
         this.icon = icon;
     }
-    public SaveAoEShrinePacket(FriendlyByteBuf buffer) {
+    public SyncAoEShrinePacket(FriendlyByteBuf buffer) {
         effect = buffer.readCharSequence(buffer.readInt(), StandardCharsets.UTF_8).toString();
         amplifier = buffer.readInt();
         duration = buffer.readInt();

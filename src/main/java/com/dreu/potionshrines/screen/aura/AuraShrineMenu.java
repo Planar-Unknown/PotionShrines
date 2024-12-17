@@ -23,8 +23,16 @@ public class AuraShrineMenu extends AbstractContainerMenu implements ShrineMenu 
     @Override
     public void resetCooldown() {
         shrineEntity.setRemainingCooldown(0);
+
+        shrineEntity.setActive(false);
         shrineEntity.setChanged();
     }
-    @Override public @NotNull ItemStack quickMoveStack(@NotNull Player player, int i) {return player.getInventory().getItem(i);}
-    @Override public boolean stillValid(@NotNull Player player) {return true;}
+    @Override
+    public @NotNull ItemStack quickMoveStack(@NotNull Player player, int i) {
+        return player.getInventory().getItem(i);
+    }
+    @Override
+    public boolean stillValid(@NotNull Player player) {
+        return true;
+    }
 }

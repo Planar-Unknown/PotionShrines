@@ -22,16 +22,17 @@ public class AoEShrineMenu extends AbstractContainerMenu implements ShrineMenu {
     }
 
     @Override
-    public @NotNull ItemStack quickMoveStack(@NotNull Player player, int i) {
-        return player.getInventory().getItem(i);
-    }
-
-    @Override
-    public boolean stillValid(@NotNull Player player) {return true;}
-
-    @Override
     public void resetCooldown() {
         shrineEntity.setRemainingCooldown(0);
         shrineEntity.setChanged();
+    }
+
+    @Override
+    public @NotNull ItemStack quickMoveStack(@NotNull Player player, int i) {
+        return player.getInventory().getItem(i);
+    }
+    @Override
+    public boolean stillValid(@NotNull Player player) {
+        return true;
     }
 }
