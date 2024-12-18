@@ -1,5 +1,6 @@
 package com.dreu.potionshrines.blocks.shrine.aura;
 
+import com.dreu.potionshrines.blocks.shrine.simple.SimpleShrineBlock;
 import com.dreu.potionshrines.registry.PSBlockEntities;
 import com.dreu.potionshrines.registry.PSTags;
 import com.dreu.potionshrines.screen.aura.AuraShrineMenu;
@@ -13,6 +14,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.effect.MobEffect;
@@ -33,6 +36,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import static com.dreu.potionshrines.PotionShrines.MODID;
 import static com.dreu.potionshrines.PotionShrines.getEffectFromString;
+import static com.dreu.potionshrines.blocks.shrine.aura.AuraShrineBlock.LIGHT_LEVEL;
 import static com.dreu.potionshrines.config.AuraShrine.getRandomAuraShrine;
 
 @SuppressWarnings("DataFlowIssue")
@@ -68,11 +72,20 @@ public class AuraShrineBlockEntity extends BlockEntity implements MenuProvider {
             if (shrine.remainingDuration > 0)
                 shrine.remainingDuration--;
             else shrine.active = false;
-        } else if (shrine.remainingCooldown > 0) shrine.remainingCooldown--;
-                
-        if (shrine.getLevel().getGameTime() % 2 == 1) {
-            spawnAreaParticles(shrine);
+            if (shrine.remainingDuration >= shrine.maxDuration - 15)
+                level.setBlock(blockPos, blockState.setValue(LIGHT_LEVEL, shrine.maxDuration - shrine.remainingDuration), 11);
+            if (shrine.remainingDuration <= 15) {
+                level.setBlock(blockPos, blockState.setValue(LIGHT_LEVEL, shrine.remainingDuration), 11);
+                if (shrine.remainingDuration == 15)
+                    level.playSound(null, blockPos, SoundEvents.BEACON_DEACTIVATE, SoundSource.BLOCKS, 3F, 1F);
+            }
+        } else {
+            if (shrine.remainingCooldown > 0) shrine.remainingCooldown--;
+            if (!level.isClientSide && blockState.getValue(SimpleShrineBlock.LIGHT_LEVEL) != 0)
+                level.setBlock(blockPos, blockState.setValue(SimpleShrineBlock.LIGHT_LEVEL, 0), 11);
         }
+        if (shrine.getLevel().getGameTime() % 2 == 1)
+            spawnAreaParticles(shrine);
     }
 
     private static void effectEntities(Level level, BlockPos blockPos, AuraShrineBlockEntity shrine) {
@@ -130,15 +143,17 @@ public class AuraShrineBlockEntity extends BlockEntity implements MenuProvider {
     @Override
     protected void saveAdditional(CompoundTag nbt) {
         nbt.putString("effect", effect);
-        nbt.putInt("duration", maxDuration);
+        nbt.putInt("max_duration", maxDuration);
         nbt.putInt("max_cooldown", maxCooldown);
         nbt.putBoolean("replenish", replenish);
         nbt.putInt("remaining_cooldown", remainingCooldown);
+        nbt.putInt("remaining_duration", remainingDuration);
         nbt.putInt("amplifier", amplifier);
         nbt.putString("icon", icon);
         nbt.putBoolean("players", effectPlayers);
         nbt.putBoolean("monsters", effectMonsters);
         nbt.putInt("radius", radius);
+        nbt.putBoolean("active", active);
         super.saveAdditional(nbt);
     }
     @Override
@@ -146,14 +161,16 @@ public class AuraShrineBlockEntity extends BlockEntity implements MenuProvider {
         super.load(nbt);
         setAmplifier(nbt.getInt("amplifier"));
         setRemainingCooldown(nbt.getInt("remaining_cooldown"));
+        setRemainingDuration(nbt.getInt("remaining_duration"));
         setMaxCooldown(nbt.getInt("max_cooldown"));
         setCanReplenish(nbt.getBoolean("replenish"));
-        setMaxDuration(nbt.getInt("duration"));
+        setMaxDuration(nbt.getInt("max_duration"));
         setEffect(nbt.getString("effect"));
         setIcon(nbt.getString("icon"));
         setCanEffectPlayers(nbt.getBoolean("players"));
         setCanEffectMonsters(nbt.getBoolean("monsters"));
         setRadius(nbt.getInt("radius"));
+        setActive(nbt.getBoolean("active"));
     }
 
     @Nullable
@@ -189,13 +206,14 @@ public class AuraShrineBlockEntity extends BlockEntity implements MenuProvider {
 
     public void setEffect(String resourceLocation){effect = resourceLocation;}
     public void setAmplifier(int lvl){amplifier = Mth.clamp(lvl, 1, 256);}
+
     public void setMaxCooldown(int ticks){
         maxCooldown = Mth.clamp(ticks, 60, 19999980);
         if (remainingCooldown > maxCooldown) remainingCooldown = maxCooldown;
     }
+
     public void setRemainingCooldown(int ticks){
         remainingCooldown = Mth.clamp(ticks, 0, maxCooldown);
-        if (remainingCooldown < maxCooldown) remainingDuration = 0;
     }
     public void setMaxDuration(int ticks){
         maxDuration = Mth.clamp(ticks, 1, 19999980);
@@ -204,7 +222,6 @@ public class AuraShrineBlockEntity extends BlockEntity implements MenuProvider {
     @SuppressWarnings("unused")
     public void setRemainingDuration(int ticks){
         remainingDuration = Mth.clamp(ticks, 1, maxDuration);
-        if (remainingDuration > 0) remainingCooldown = maxCooldown;
     }
     public void setRadius(int blocks){radius = Mth.clamp(blocks, 3, 64);}
     public void setCanEffectPlayers(boolean b){effectPlayers = b;}

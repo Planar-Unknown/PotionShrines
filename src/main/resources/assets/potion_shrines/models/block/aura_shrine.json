@@ -584,7 +584,7 @@
 		},
 		{
 			"name": "top_center",
-			"from": [6, 22.499, 6],
+			"from": [6, 22.87, 6],
 			"to": [10, 28.499, 10],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 6, 8]},
 			"faces": {
@@ -654,8 +654,8 @@
 		},
 		{
 			"name": "mid_center",
-			"from": [7, 8, 7],
-			"to": [9, 23, 9],
+			"from": [7, 8.82, 7],
+			"to": [9, 22.82, 9],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 9]},
 			"faces": {
 				"north": {"uv": [0, 0, 2, 15], "texture": "#0"},

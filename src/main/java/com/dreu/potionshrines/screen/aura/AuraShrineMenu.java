@@ -12,25 +12,31 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.NotNull;
 
 public class AuraShrineMenu extends AbstractContainerMenu implements ShrineMenu {
+
     public final AuraShrineBlockEntity shrineEntity;
+
     public AuraShrineMenu(int id, Inventory inventory, FriendlyByteBuf extraData){
         this(id, inventory.player.level.getBlockEntity(extraData.readBlockPos()));
     }
+
     public AuraShrineMenu(int id, BlockEntity blockEntity){
         super(PSMenuTypes.AURA_SHRINE_MENU.get() , id);
         shrineEntity = (AuraShrineBlockEntity) blockEntity;
     }
+
     @Override
     public void resetCooldown() {
         shrineEntity.setRemainingCooldown(0);
-
+        shrineEntity.setRemainingDuration(0);
         shrineEntity.setActive(false);
         shrineEntity.setChanged();
     }
+
     @Override
     public @NotNull ItemStack quickMoveStack(@NotNull Player player, int i) {
         return player.getInventory().getItem(i);
     }
+
     @Override
     public boolean stillValid(@NotNull Player player) {
         return true;

@@ -54,7 +54,7 @@ public class PSBlocks {
 
         public static final RegistryObject<Block> AURA_SHRINE = BLOCKS.register("aura_shrine",
                 () -> new AuraShrineBlock(BlockBehaviour.Properties.copy(Blocks.STONE)
-                        .lightLevel((blockstate) -> blockstate.getValue(LIGHT_LEVEL))
+                        .lightLevel(blockstate -> blockstate.getValue(LIGHT_LEVEL))
                         .emissiveRendering((blockState, blockGetter, blockPos) -> true)));
         public static final RegistryObject<Block> AURA_SHRINE_BASE = BLOCKS.register("aura_shrine_base",
                 () -> new ShrineBaseBlock(BlockBehaviour.Properties.copy(Blocks.STONE)

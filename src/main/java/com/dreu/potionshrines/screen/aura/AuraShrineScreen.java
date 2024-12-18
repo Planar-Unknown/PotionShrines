@@ -1,6 +1,5 @@
 package com.dreu.potionshrines.screen.aura;
 
-import com.dreu.potionshrines.network.PacketHandler;
 import com.dreu.potionshrines.network.ResetCooldownPacket;
 import com.dreu.potionshrines.network.SyncAuraShrinePacket;
 import com.dreu.potionshrines.screen.IconScreen;
@@ -21,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 
 import static com.dreu.potionshrines.PotionShrines.*;
+import static com.dreu.potionshrines.network.PacketHandler.CHANNEL;
 import static java.lang.Boolean.parseBoolean;
 import static java.lang.Integer.parseInt;
 
@@ -36,11 +36,12 @@ public class AuraShrineScreen extends ShrineScreen<AuraShrineMenu> implements Ic
         iconY = 103;
         backgroundTexture = new ResourceLocation(MODID, "textures/gui/aoe_shrine_screen.png");
     }
+
     @Override
     protected void containerTick() {
         resetCooldownButton.setMessage(Component.literal(String.valueOf(menu.shrineEntity.getRemainingCooldown() / 20)));
         resetDurationButton.setMessage(Component.literal(String.valueOf(menu.shrineEntity.getRemainingDuration() / 20)));
-        boolean areButtonsActive =!(menu.shrineEntity.getRemainingCooldown() == 0 && menu.shrineEntity.getRemainingDuration() == 0);
+        boolean areButtonsActive = !(menu.shrineEntity.getRemainingCooldown() == 0 && menu.shrineEntity.getRemainingDuration() == 0);
         resetCooldownButton.active = areButtonsActive;
         resetDurationButton.active = areButtonsActive;
 
@@ -197,9 +198,8 @@ public class AuraShrineScreen extends ShrineScreen<AuraShrineMenu> implements Ic
     }
     @Override
     protected void onCooldownClick(Button button) {
-        menu.shrineEntity.setRemainingCooldown(0);
-        menu.shrineEntity.setActive(false);
-        PacketHandler.CHANNEL.sendToServer(new ResetCooldownPacket());
+        menu.resetCooldown();
+        CHANNEL.sendToServer(new ResetCooldownPacket());
     }
     @Override
     protected void onIconClick() {
@@ -242,8 +242,9 @@ public class AuraShrineScreen extends ShrineScreen<AuraShrineMenu> implements Ic
         menu.shrineEntity.setCanEffectPlayers(parseBoolean(effectPlayersButton.getMessage().getString()));
         menu.shrineEntity.setCanEffectMonsters(parseBoolean(effectMonstersButton.getMessage().getString()));
         menu.shrineEntity.setCanReplenish(parseBoolean(replenishButton.getMessage().getString()));
+        menu.shrineEntity.setActive(menu.shrineEntity.isActive());
         menu.shrineEntity.setIcon(icon);
-        PacketHandler.CHANNEL.sendToServer(new SyncAuraShrinePacket(
+        CHANNEL.sendToServer(new SyncAuraShrinePacket(
                 effectBox.getValue(),
                 menu.shrineEntity.getAmplifier(),
                 menu.shrineEntity.getMaxDuration(),

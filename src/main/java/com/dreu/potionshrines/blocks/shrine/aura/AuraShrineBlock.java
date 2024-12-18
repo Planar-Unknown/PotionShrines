@@ -132,7 +132,7 @@ public class AuraShrineBlock extends Block implements EntityBlock {
         } else if (shrine.canUse()) {
             shrine.activateAura();
             if (!level.isClientSide) {
-                level.playSound(null, blockPos, SoundEvents.BEACON_DEACTIVATE, SoundSource.BLOCKS, 3F, 1F);
+                level.playSound(null, blockPos, SoundEvents.BEACON_ACTIVATE, SoundSource.BLOCKS, 3F, 1F);
             }
             return InteractionResult.SUCCESS;
         }
