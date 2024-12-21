@@ -54,7 +54,7 @@ public class PSBlocks {
 
         public static final RegistryObject<Block> AURA_SHRINE = BLOCKS.register("aura_shrine",
                 () -> new AuraShrineBlock(BlockBehaviour.Properties.copy(Blocks.STONE)
-                        .lightLevel(blockstate -> blockstate.getValue(LIGHT_LEVEL))
+                        .lightLevel(blockstate -> blockstate.getValue(LIGHT_LEVEL) + 7)
                         .emissiveRendering((blockState, blockGetter, blockPos) -> true)));
         public static final RegistryObject<Block> AURA_SHRINE_BASE = BLOCKS.register("aura_shrine_base",
                 () -> new ShrineBaseBlock(BlockBehaviour.Properties.copy(Blocks.STONE)
@@ -67,10 +67,4 @@ public class PSBlocks {
                 () -> new DecrepitShrineBlock(BlockBehaviour.Properties.copy(Blocks.STONE).strength(5),
                         AURA_BOTTOM_SHAPE,
                         AURA_TOP_SHAPE));
-//        @SuppressWarnings("SameParameterValue")
-//        private static <T extends Block> RegistryObject<T> registerVanillaBlockAndItem(String name, Supplier<T> block, CreativeModeTab tab) {
-//                RegistryObject<T> registeredBlock = VANILLA_BLOCKS.register(name, block);
-//                VANILLA_ITEMS.register(name, () -> new BlockItem(registeredBlock.get(), new Item.Properties().tab(tab)));
-//                return registeredBlock;
-//        }
 }
