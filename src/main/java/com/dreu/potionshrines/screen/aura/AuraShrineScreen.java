@@ -231,10 +231,10 @@ public class AuraShrineScreen extends ShrineScreen<AuraShrineMenu> implements Ic
         menu.shrineEntity.setEffect(effectBox.getValue());
         if (!amplifierBox.getValue().isEmpty())
             menu.shrineEntity.setAmplifier(parseInt(amplifierBox.getValue()));
-        if (!maxDurationBox.getValue().isEmpty())
-            menu.shrineEntity.setMaxDuration(parseInt(maxDurationBox.getValue()) * 20);
         if (!maxCooldownBox.getValue().isEmpty())
             menu.shrineEntity.setMaxCooldown(parseInt(maxCooldownBox.getValue()) * 20);
+        if (!maxDurationBox.getValue().isEmpty())
+            menu.shrineEntity.setMaxDuration(parseInt(maxDurationBox.getValue()) * 20);
         if (!radiusBox.getValue().isEmpty())
             menu.shrineEntity.setRadius(parseInt(radiusBox.getValue()));
         menu.shrineEntity.setRemainingDuration(parseInt(resetDurationButton.getMessage().getString()) * 20);
@@ -244,6 +244,7 @@ public class AuraShrineScreen extends ShrineScreen<AuraShrineMenu> implements Ic
         menu.shrineEntity.setCanReplenish(parseBoolean(replenishButton.getMessage().getString()));
         menu.shrineEntity.setActive(menu.shrineEntity.isActive());
         menu.shrineEntity.setIcon(icon);
+
         CHANNEL.sendToServer(new SyncAuraShrinePacket(
                 effectBox.getValue(),
                 menu.shrineEntity.getAmplifier(),

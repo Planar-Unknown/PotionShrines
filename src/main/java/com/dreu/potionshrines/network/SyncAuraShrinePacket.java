@@ -12,7 +12,7 @@ public class SyncAuraShrinePacket {
     private final String effect, icon;
     private final int amplifier, radius, maxDuration, maxCooldown, remainingDuration, remainingCooldown;
     private final boolean effectPlayers, effectMonsters, replenish, active;
-    public SyncAuraShrinePacket(String effect, int amplifier, int duration, int maxCooldown, int radius, boolean effectPlayers, boolean effectMonsters, boolean replenish, String icon, boolean active, int remainingCooldown, int remainingDuration){
+    public SyncAuraShrinePacket(String effect, int amplifier, int duration, int maxCooldown, int radius, boolean effectPlayers, boolean effectMonsters, boolean replenish, String icon, boolean active, int remainingDuration, int remainingCooldown){
         this.effect = effect;
         this.amplifier = amplifier;
         this.radius = radius;

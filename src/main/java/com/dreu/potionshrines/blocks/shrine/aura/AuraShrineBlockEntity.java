@@ -95,7 +95,6 @@ public class AuraShrineBlockEntity extends BlockEntity implements MenuProvider {
             level.getEntitiesOfClass(Player.class, new AABB(blockPos).inflate(shrine.getRadius())).stream()
                     .filter(nearPlayer -> nearPlayer.blockPosition().distSqr(blockPos) <= shrine.getRadius() * shrine.getRadius())
                     .toList().forEach(filteredPlayer -> {
-                        assert mobEffect != null;
                         if (filteredPlayer.hasEffect(mobEffect)) {
                             if (filteredPlayer.getEffect(mobEffect).getAmplifier() >= shrine.getAmplifier() - 1)
                                 filteredPlayer.getEffect(mobEffect).update(new MobEffectInstance(
@@ -205,13 +204,13 @@ public class AuraShrineBlockEntity extends BlockEntity implements MenuProvider {
     public String getIcon(){return icon;}
 
     public void setEffect(String resourceLocation){effect = resourceLocation;}
-    public void setAmplifier(int lvl){amplifier = Mth.clamp(lvl, 1, 256);}
-
+    public void setAmplifier(int lvl){
+        amplifier = Mth.clamp(lvl, 1, 256);
+    }
     public void setMaxCooldown(int ticks){
         maxCooldown = Mth.clamp(ticks, 60, 19999980);
         if (remainingCooldown > maxCooldown) remainingCooldown = maxCooldown;
     }
-
     public void setRemainingCooldown(int ticks){
         remainingCooldown = Mth.clamp(ticks, 0, maxCooldown);
     }
@@ -219,6 +218,8 @@ public class AuraShrineBlockEntity extends BlockEntity implements MenuProvider {
         maxDuration = Mth.clamp(ticks, 1, 19999980);
         if (remainingDuration > maxDuration) remainingDuration = maxDuration;
     }
+
+
     @SuppressWarnings("unused")
     public void setRemainingDuration(int ticks){
         remainingDuration = Mth.clamp(ticks, 1, maxDuration);
